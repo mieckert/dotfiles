@@ -1,0 +1,6 @@
+#!/bin/bash
+IFS='\n'
+
+for i in $@; do
+  /cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe --remote-tab-silent "`cygpath -w \"$i\"`" &
+done

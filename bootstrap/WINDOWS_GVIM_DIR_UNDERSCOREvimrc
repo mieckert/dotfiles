@@ -1,0 +1,3 @@
+" Copy this file to file C:\Program files (x86)\Vim\_vimrc
+" (Making a backup of the original)
+source C:\cygwin\home\meckert\dotfiles\vimrc

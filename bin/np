@@ -1,0 +1,5 @@
+#!/bin/bash
+for i in $*; do
+  /cygdrive/c/Program\ Files\ \(x86\)/Notepad++/notepad++.exe "`cygpath -w $i`" &
+done
+#/cygdrive/c/Program\ Files/Notepad++/notepad++.exe `cygpath -w $*` &

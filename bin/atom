@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#export TEMP=C:\\temp
+#export TMP=C:\\temp
+
+#PREVIFS=$IFS
+#IFS='#'
+
+#params=""
+#for i in $@; do
+#    file="`cygpath -w \"$i\"`" 
+#    params="$params \"\"\"$file\"\"\""
+#done
+#IFS=$PREVIFS
+echo cmd.exe /c "start \"\"\"WindowTitle\"\"\" \"\"\"c:\\Program Files\\Atom\\atom.exe\"\"\" test.txt"
+cmd.exe /c "start \"\"\"WindowTitle\"\"\" \"\"\"c:\\Program Files\\Atom\\atom.exe\"\"\" test.txt"
