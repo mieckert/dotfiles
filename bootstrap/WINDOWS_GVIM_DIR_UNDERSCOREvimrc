@@ -2,6 +2,8 @@
 " (Making a backup of the original)
 if filereadable("C:\cygwin\home\meckert\dotfiles\vimrc")
     source C:\cygwin\home\meckert\dotfiles\vimrc
-elseif filereadable("C:\dotfiles\vimrc")
+elseif filereadable("C:/dotfiles/vimrc")
     source C:\dotfiles\vimrc
+else
+	:echom "Did not find a dotfiles directory with a vimrc"
 end

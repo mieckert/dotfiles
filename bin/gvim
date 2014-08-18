@@ -15,8 +15,7 @@ then
     eval \"$GVIM_EXE\" --remote-tab-silent $params &
 elif [[ "$OSTYPE" == "msys" ]]
 then
-    #GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
-    GVIM_EXE=echo
+    GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
     IFS='#'
     params=""
     for i in $@; do
