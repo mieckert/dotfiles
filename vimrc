@@ -46,6 +46,7 @@ set expandtab
 if has("gui_running")
   set columns=120
   set lines=45
+  set mouse=a
 endif
 
 if has("win32")
@@ -57,9 +58,22 @@ endif
 
 au BufNewFile,BufRead *.md setf markdown
 
+" Enable folding for XML files and make sure that everything is unfolded on
+" startup
 let g:xml_syntax_folding=1
-
 au FileType xml setlocal foldmethod=syntax
 au FileType xml setlocal foldcolumn=8
 au FileType xml execute "normal! zR"
 
+" Make sure that the menu language is English
+set langmenu=en_US
+let $LANG = 'en_US'
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
+
+" Move tabs with alt + left|right
+" See http://stackoverflow.com/questions/2106138/rearrange-tabs-with-the-mouse-in-gvim
+nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+nnoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
+
+colorscheme slate
