@@ -1,15 +1,29 @@
 #!/bin/bash
-#export TEMP=~/tmp
-#export TMP=~/tmp
 
 export TEMP=C:\\temp
 export TMP=C:\\temp
 
-IFS='#'
-
-params=""
-for i in $@; do
-    file="`cygpath -w \"$i\"`" 
-    params="$params \"$file\""
-done
-eval \"/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe\" --remote-tab-silent $params &
+if   [[ "$OSTYPE" == "cygwin" ]]
+then
+    GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+    IFS='#'
+    params=""
+    for i in $@; do
+        file="`cygpath -w \"$i\"`" 
+        params="$params \"$file\""
+    done
+    eval \"$GVIM_EXE\" --remote-tab-silent $params &
+elif [[ "$OSTYPE" == "msys" ]]
+then
+    #GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+    GVIM_EXE=echo
+    IFS='#'
+    params=""
+    for i in $@; do
+        file="`echo $i | sed -re 's/^\/([a-z])\//\1:\//g'`" 
+        params="$params \"$file\""
+    done
+    eval \"$GVIM_EXE\" --remote-tab-silent $params &
+else
+    echo "Unsupported OSTYPE=$OSTYPE"
+fi
