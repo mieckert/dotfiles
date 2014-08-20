@@ -71,9 +71,23 @@ let $LANG = 'en_US'
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 
-" Move tabs with alt + left|right
+" Move tabs with Ctrl-Shift-PageUp/Down
 " See http://stackoverflow.com/questions/2106138/rearrange-tabs-with-the-mouse-in-gvim
 nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-nnoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
+nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+inoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
+inoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
+
+" Autocompletion with CTRL-space
+inoremap <C-Space> <C-X><C-I>
+nnoremap <C-Space> cw<C-X><C-I>
+
+" Increment, decrement commands (usually CTRL-X and CTRL-A; but re-mapped
+" since CTRL-A is used in windows to select the whole buffer)
+set nrformats=hex
+nnoremap <leader>a <C-A>
+nnoremap <leader>x <C-X>
 
 colorscheme slate
+
+

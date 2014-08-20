@@ -3,26 +3,27 @@
 export TEMP=C:\\temp
 export TMP=C:\\temp
 
-if   [[ "$OSTYPE" == "cygwin" ]]
+GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+
+if [[ -z "$@" ]]
 then
-    GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
-    IFS='#'
-    params=""
-    for i in $@; do
-        file="`cygpath -w \"$i\"`" 
-        params="$params \"$file\""
-    done
-    eval \"$GVIM_EXE\" --remote-tab-silent $params &
-elif [[ "$OSTYPE" == "msys" ]]
-then
-    GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
-    IFS='#'
-    params=""
-    for i in $@; do
-        file="`echo $i | sed -re 's/^\/([a-z])\//\1:\//g'`" 
-        params="$params \"$file\""
-    done
-    eval \"$GVIM_EXE\" --remote-tab-silent $params &
+    eval \"$GVIM_EXE\" &
 else
-    echo "Unsupported OSTYPE=$OSTYPE"
+    IFS='#'
+    params=""
+
+    for i in $@; do
+        if   [[ "$OSTYPE" == "cygwin" ]]
+        then
+            file="`cygpath -w \"$i\"`" 
+        elif [[ "$OSTYPE" == "msys" ]]
+        then
+            file="`echo $i | sed -re 's/^\/([a-z])\//\1:\//g'`" 
+        else
+            file=$i
+        fi
+        params="$params \"$file\""
+    done
+
+    eval \"$GVIM_EXE\" --remote-tab-silent $params &
 fi
