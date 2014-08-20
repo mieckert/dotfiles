@@ -1,0 +1,3 @@
+TODO
+- bin/gvim: add capability to specifiy vim command line parameters (e.g., -d)
+
