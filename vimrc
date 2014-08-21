@@ -28,9 +28,15 @@ function! MyDiff()
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
 
+let s:path = expand('<sfile>:p')
+let s:folder = expand('<sfile>:p:h')
+
+let &runtimepath.=',' . s:folder . "/vimfiles"
+
+execute pathogen#infect()
+
 syntax on
 let mapleader="-"
-let s:path = expand('<sfile>:p')
 execute "nnoremap <leader>ev :tabedit " . s:path . "<cr>"
 execute "nnoremap <leader>sv :source " . s:path . "<cr>"
 nnoremap <leader>/ :let @/=""<cr>
