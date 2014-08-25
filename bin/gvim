@@ -3,7 +3,16 @@
 export TEMP=C:\\temp
 export TMP=C:\\temp
 
-GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+if   [[ "$OSTYPE" == "cygwin" ]]
+then
+    GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+elif [[ "$OSTYPE" == "msys" ]]
+then
+    GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+else
+    GVIM_EXE=gvim
+fi
+
 
 if [[ -z "$@" ]]
 then
