@@ -32,6 +32,7 @@ let s:path = expand('<sfile>:p')
 let s:folder = expand('<sfile>:p:h')
 
 let &runtimepath.=',' . s:folder . "/vimfiles"
+"let &runtimepath.=',' . s:folder . "/vimfiles/vim-snippets"
 
 " Start Pathogen package manager (required by syntastic and other packages)
 execute pathogen#infect()
@@ -49,6 +50,7 @@ set guifont=Consolas:h12:cANSI
 set tabstop=4
 set shiftwidth=4
 set expandtab
+
 
 if has("gui_running")
   set columns=120
@@ -89,9 +91,30 @@ nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 inoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
 inoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
 
+
 " Autocompletion with CTRL-space
 inoremap <C-Space> <C-X><C-I>
 nnoremap <C-Space> cw<C-X><C-I>
+
+
+" SnipMate keys
+:imap <C-J> <Plug>snipMateNextOrTrigger
+:smap <C-J> <Plug>snipMateNextOrTrigger
+:imap <C-K> <Plug>snipMateBack
+:imap <C-I> <Plug>snipMateShow
+
+let g:snipMate = {}
+let g:snipMate['no_match_completion_feedkeys_chars'] = ""
+
+au FileType snippets setlocal foldcolumn=8
+au FileType snippets execute "normal! zR"
+
+
+" Override filetype for json (don't use javascript!)
+augroup filetypedetect
+  au! BufNewFile,BufRead *.json setf json
+augroup END
+
 
 " Increment, decrement commands (usually CTRL-X and CTRL-A; but re-mapped
 " since CTRL-A is used in windows to select the whole buffer)
@@ -99,11 +122,13 @@ set nrformats=hex
 nnoremap <leader>a <C-A>
 nnoremap <leader>x <C-X>
 
+
 " Use smartcase for search (i.e., case-sensitive search if search keyword
 " contains upper-case letters, case-insenstivie otherwise).  Using smartcase
 " requires ignorecase to be on!
 set ignorecase
 set smartcase
+
 
 " Set a nice color scheme with a dark grey background
 colorscheme slate
