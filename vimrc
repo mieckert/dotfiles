@@ -33,6 +33,7 @@ let s:folder = expand('<sfile>:p:h')
 
 let &runtimepath.=',' . s:folder . "/vimfiles"
 
+" Start Pathogen package manager (required by syntastic and other packages)
 execute pathogen#infect()
 
 syntax on
@@ -71,6 +72,10 @@ au FileType xml setlocal foldmethod=syntax
 au FileType xml setlocal foldcolumn=8
 au FileType xml execute "normal! zR"
 
+" Settings for synastic syntax checker (jshint etc.)
+" see https://github.com/scrooloose/syntastic/blob/master/doc/syntastic.txt
+let g:syntastic_check_on_open = 1
+
 " Make sure that the menu language is English
 set langmenu=en_US
 let $LANG = 'en_US'
@@ -94,6 +99,13 @@ set nrformats=hex
 nnoremap <leader>a <C-A>
 nnoremap <leader>x <C-X>
 
+" Use smartcase for search (i.e., case-sensitive search if search keyword
+" contains upper-case letters, case-insenstivie otherwise).  Using smartcase
+" requires ignorecase to be on!
+set ignorecase
+set smartcase
+
+" Set a nice color scheme with a dark grey background
 colorscheme slate
 
 
