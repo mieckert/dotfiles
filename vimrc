@@ -98,17 +98,19 @@ nnoremap <C-Space> cw<C-X><C-I>
 
 
 " SnipMate keys
-:imap <C-J> <Plug>snipMateNextOrTrigger
-:smap <C-J> <Plug>snipMateNextOrTrigger
-:imap <C-K> <Plug>snipMateBack
-:imap <C-I> <Plug>snipMateShow
+imap <C-J> <Plug>snipMateNextOrTrigger
+smap <C-J> <Plug>snipMateNextOrTrigger
+imap <C-K> <Plug>snipMateBack
+smap <C-K> <Plug>snipMateBack
+imap <C-L> <Plug>snipMateShow
+smap <C-L> <Plug>snipMateShow
+nnoremap <leader>sm :SnipMateOpenSnippetFiles<CR>
 
 let g:snipMate = {}
 let g:snipMate['no_match_completion_feedkeys_chars'] = ""
 
 au FileType snippets setlocal foldcolumn=8
 au FileType snippets execute "normal! zR"
-
 
 " Override filetype for json (don't use javascript!)
 augroup filetypedetect
