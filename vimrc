@@ -88,8 +88,8 @@ source $VIMRUNTIME/menu.vim
 " See http://stackoverflow.com/questions/2106138/rearrange-tabs-with-the-mouse-in-gvim
 nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-inoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
-inoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
+inoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
+inoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
 
 
 " Autocompletion with CTRL-space
@@ -104,7 +104,14 @@ imap <C-K> <Plug>snipMateBack
 smap <C-K> <Plug>snipMateBack
 imap <C-L> <Plug>snipMateShow
 smap <C-L> <Plug>snipMateShow
-nnoremap <leader>sm :SnipMateOpenSnippetFiles<CR>
+"imap <C-J> <C-O>:echom 'sm_i_nextOrTrigger'<CR><Plug>snipMateNextOrTrigger
+"smap <C-J> <ESC>:echom 'sm_s_nextOrTrigger'<CR>gh<Plug>snipMateNextOrTrigger
+"imap <C-K> <C-O>:echom 'sm_i_back'<CR><Plug>snipMateBack
+"smap <C-K> <ESC>:echom 'sm_s_back'<CR>gh<Plug>snipMateBack
+"imap <C-L> <C-O>:echom 'sm_i_show'<CR><Plug>snipMateShow
+"smap <C-L> <ESC>:echom 'sm_s_show'<CR>gh<Plug>snipMateShow
+"nnoremap <leader>sm :SnipMateOpenSnippetFiles<CR>
+execute "nnoremap <leader>es :tabedit " . s:folder . "/vimfiles/snippets/<cr>"
 
 let g:snipMate = {}
 let g:snipMate['no_match_completion_feedkeys_chars'] = ""
@@ -135,4 +142,14 @@ set smartcase
 " Set a nice color scheme with a dark grey background
 colorscheme slate
 
+function! SnipMateStatus()
+    if exists("b:snip_state")
+        let b:statusline_snip_state = "*** SNIP ***"
+    else
+        let b:statusline_snip_state = "no snip"
+    endif
+    return b:statusline_snip_state
+endfunction
 
+"set statusline+=%{SnipMateStatus()}
+"set statusline=%!SnipMateStatus()
