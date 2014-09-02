@@ -11,7 +11,21 @@ snippet ft-grunt
 	/* `'vim'`: set filetype=javascript.grunt : */ 
 
 # comments to configure jshint
-snippet jshint
+snippet jshint-settings
 	/***** JSHint options and settings *****/
-	/* jshint node:${1:true}               */
+	/* jshint devel:true                   */
+	/* jshint node:false                   */
+	/* jshint jquery:false                 */
+	/* jshint sub:true                     */
+	/* jshint undef:true                   */
+	/* jshint curly:true                   */
+	/* global angular                      */
 	/***************************************/
+
+# use strict
+snippet strict
+	(function(){ 'use strict';
+		
+	${1: //code goes here}
+
+	})(); // end of 'use strict' function wrapper

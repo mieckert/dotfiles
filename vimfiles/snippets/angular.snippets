@@ -15,8 +15,22 @@ snippet router
 	            })
 	        ;
 	}]);
+
 snippet when
 	.when('/${1:myUrl}', {
 	    templateUrl: 'partials/${2:myPartial}.html',
 	    controller: '${3:MyCtrl}'
 	})
+
+snippet app
+	var app = angular.module('${1:myApp}', [
+		'ngRoute',
+		'$1.controllers'
+	]);
+
+snippet controller
+	angular.module('${1:myApp}.controllers', [])
+	.controller('${2:First}Ctrl', ['$scope', function($scope) {
+		${0}
+	}]);
+

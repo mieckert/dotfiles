@@ -77,6 +77,7 @@ au FileType xml execute "normal! zR"
 " Settings for synastic syntax checker (jshint etc.)
 " see https://github.com/scrooloose/syntastic/blob/master/doc/syntastic.txt
 let g:syntastic_check_on_open = 1
+let g:syntastic_html_tidy_ignore_errors = ['proprietary attribute']
 
 " Make sure that the menu language is English
 set langmenu=en_US
@@ -111,12 +112,12 @@ smap <C-L> <Plug>snipMateShow
 "imap <C-L> <C-O>:echom 'sm_i_show'<CR><Plug>snipMateShow
 "smap <C-L> <ESC>:echom 'sm_s_show'<CR>gh<Plug>snipMateShow
 "nnoremap <leader>sm :SnipMateOpenSnippetFiles<CR>
-execute "nnoremap <leader>es :tabedit " . s:folder . "/vimfiles/snippets/<cr>"
+execute "nnoremap <leader>es :tabedit " . s:folder . "/vimfiles/snippets/<cr>c"
 
 let g:snipMate = {}
 let g:snipMate['no_match_completion_feedkeys_chars'] = ""
 
-au FileType snippets setlocal foldcolumn=8
+au FileType snippets setlocal foldcolumn=2
 au FileType snippets execute "normal! zR"
 
 " Override filetype for json (don't use javascript!)

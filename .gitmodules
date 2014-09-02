@@ -13,3 +13,6 @@
 [submodule "vimfiles/vim-snippets"]
 	path = vimfiles/vim-snippets
 	url = https://github.com/honza/vim-snippets.git
+[submodule "vimfiles/bundle/tabular"]
+	path = vimfiles/bundle/tabular
+	url = git://github.com/godlygeek/tabular.git

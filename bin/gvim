@@ -20,19 +20,25 @@ then
 else
     IFS='#'
     params=""
+    opts=""
 
     for i in $@; do
-        if   [[ "$OSTYPE" == "cygwin" ]]
+        if   [[ $i == -* ]]
         then
-            file="`cygpath -w \"$i\"`" 
-        elif [[ "$OSTYPE" == "msys" ]]
-        then
-            file="`echo $i | sed -re 's/^\/([a-z])\//\1:\//g'`" 
+            opts="$opts $i" 
         else
-            file=$i
+            if   [[ "$OSTYPE" == "cygwin" ]]
+            then
+                file="`cygpath -w \"$i\"`" 
+            elif [[ "$OSTYPE" == "msys" ]]
+            then
+                file="`echo $i | sed -re 's/^\/([a-z])\//\1:\//g'`" 
+            else
+                file=$i
+            fi
+            params="$params \"$file\""
         fi
-        params="$params \"$file\""
     done
 
-    eval \"$GVIM_EXE\" --remote-tab-silent $params &
+    eval \"$GVIM_EXE\" $opts --remote-tab-silent $params &
 fi
