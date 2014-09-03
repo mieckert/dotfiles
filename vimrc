@@ -139,6 +139,9 @@ nnoremap <leader>x <C-X>
 set ignorecase
 set smartcase
 
+" Get rid of backup files and live on the edge
+set nobackup
+set nowritebackup
 
 " Set a nice color scheme with a dark grey background
 colorscheme slate
