@@ -145,6 +145,9 @@ set nowritebackup
 
 " Set a nice color scheme with a dark grey background
 colorscheme slate
+set cursorline
+hi clear CursorLine
+hi CursorLineNr term=bold ctermfg=14 gui=bold guifg=gray90
 
 function! SnipMateStatus()
     if exists("b:snip_state")

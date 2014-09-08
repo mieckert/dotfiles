@@ -50,7 +50,7 @@ snippet jshint
 snippet wiredep
 	wiredep: {
 		target: {
-			// Point to the file(s) that should be updated when you run `grunt wiredep`
+			// Point to the file(s) that should be updated when you run "grunt wiredep"
 			src: [
 				'app/index.html', 
 			],
@@ -82,3 +82,12 @@ snippet jsonlint
 		}
 	},
 	
+snippet connect
+	connect: {
+		server: {
+			options: {
+				port: ${1:9000},
+				hostname: '*'			
+			}
+		}
+	}

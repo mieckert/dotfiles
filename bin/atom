@@ -3,16 +3,23 @@
 #export TEMP=C:\\temp
 #export TMP=C:\\temp
 
-#PREVIFS=$IFS
-#IFS='#'
+PREVIFS=$IFS
+IFS='#'
 
 params=""
 for i in $@; do
     rp=`realpath $i`
     file="`cygpath -w \"$rp\"`" 
-    params="$params \"\"\"$file\"\"\""
+    #params="$params \"\"\"$file\"\"\""
+    params="$params $file"
 done
 IFS=$PREVIFS
 
-cmd.exe /c "start \"\"\"WindowTitle\"\"\" \"\"\"c:\\Program Files\\Atom\\atom.exe\"\"\" $params"
+ATOM_EXE="/cygdrive/c/Program Files/Atom/atom.exe"
+ATOM_EXE=`cygpath -d "$ATOM_EXE"`
+
+echo ATOM_EXE = $ATOM_EXE
+
+echo cmd.exe /c "start \"\"\"WindowTitle\"\"\" $ATOM_EXE$params"
+cmd.exe /c "start \"\"\"WindowTitle\"\"\" $ATOM_EXE$params"
 
