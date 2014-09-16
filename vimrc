@@ -76,8 +76,10 @@ au FileType xml execute "normal! zR"
 
 " Settings for synastic syntax checker (jshint etc.)
 " see https://github.com/scrooloose/syntastic/blob/master/doc/syntastic.txt
+" and https://github.com/scrooloose/syntastic/wiki/Syntax-Checkers
 let g:syntastic_check_on_open = 1
-let g:syntastic_html_tidy_ignore_errors = ['proprietary attribute']
+let g:syntastic_html_tidy_ignore_errors = ["proprietary attribute", "trimming empty <span>", "trimming inside empty <button>"]
+let g:syntastic_html_tidy_empty_tags = ['span']
 
 " Make sure that the menu language is English
 set langmenu=en_US
@@ -88,9 +90,9 @@ source $VIMRUNTIME/menu.vim
 " Move tabs with Ctrl-Shift-PageUp/Down
 " See http://stackoverflow.com/questions/2106138/rearrange-tabs-with-the-mouse-in-gvim
 nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+inoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 inoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
-inoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
+nnoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
 
 
 " Autocompletion with CTRL-space
@@ -125,6 +127,8 @@ augroup filetypedetect
   au! BufNewFile,BufRead *.json setf json
 augroup END
 
+" Key to redetect filetype
+nnoremap <leader>f :filetype detect<CR>
 
 " Increment, decrement commands (usually CTRL-X and CTRL-A; but re-mapped
 " since CTRL-A is used in windows to select the whole buffer)
@@ -132,6 +136,12 @@ set nrformats=hex
 nnoremap <leader>a <C-A>
 nnoremap <leader>x <C-X>
 
+" Enable line numbers for selected file types
+au FileType javascript setlocal number
+au FileType json setlocal number
+au FileType ruby setlocal number
+au FileType java setlocal number
+au FileType html setlocal number
 
 " Use smartcase for search (i.e., case-sensitive search if search keyword
 " contains upper-case letters, case-insenstivie otherwise).  Using smartcase
@@ -142,12 +152,14 @@ set smartcase
 " Get rid of backup files and live on the edge
 set nobackup
 set nowritebackup
+set noswapfile
 
 " Set a nice color scheme with a dark grey background
 colorscheme slate
 set cursorline
 hi clear CursorLine
-hi CursorLineNr term=bold ctermfg=14 gui=bold guifg=gray90
+hi CursorLineNr term=bold ctermfg=14 gui=bold guifg=gray90 guibg=gray18
+hi LineNr guibg=gray18
 
 function! SnipMateStatus()
     if exists("b:snip_state")
