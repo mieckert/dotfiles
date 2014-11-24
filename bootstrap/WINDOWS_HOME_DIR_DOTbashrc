@@ -1,0 +1,4 @@
+export PATH=$PATH:/c/dotfiles/bin
+
+alias ls='ls --color'
+alias ll='ls -l --color'
