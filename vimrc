@@ -78,7 +78,7 @@ au FileType xml execute "normal! zR"
 " see https://github.com/scrooloose/syntastic/blob/master/doc/syntastic.txt
 " and https://github.com/scrooloose/syntastic/wiki/Syntax-Checkers
 let g:syntastic_check_on_open = 1
-let g:syntastic_html_tidy_ignore_errors = ["proprietary attribute", "trimming empty <span>", "trimming inside empty <button>"]
+let g:syntastic_html_tidy_ignore_errors = ["proprietary attribute", "trimming empty <span>", "trimming inside empty <button>", "trimming empty <button>", "discarding unexpected", "is not recognized!", "<form> lacks \"action\" attribute"]
 let g:syntastic_html_tidy_empty_tags = ['span']
 
 " Make sure that the menu language is English
@@ -90,9 +90,9 @@ source $VIMRUNTIME/menu.vim
 " Move tabs with Ctrl-Shift-PageUp/Down
 " See http://stackoverflow.com/questions/2106138/rearrange-tabs-with-the-mouse-in-gvim
 nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-inoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+inoremap <silent> <C-S-PageUp> <C-O>:execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+nnoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
 inoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
-nnoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
 
 
 " Autocompletion with CTRL-space

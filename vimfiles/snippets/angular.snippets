@@ -40,3 +40,25 @@ snippet value
 		${3:myProp: 42}
 	});
 	
+snippet directive
+	angular.module('${1:myApp}.directives', [])
+	.directive("fileupload", [function(){
+		return {
+			restrict: 'AEC', 
+			transclude: true,
+			scope: {
+				localName:  '@interpolatedValue',
+				localModel: '=parentModelOnParentScope',
+				localFn:    '&expression'
+			},
+			template: '<p> text here <ng-transclude /> </p>',
+			// alternatively use templateUrl: 'path/to/file.html',
+
+			link: link,
+			//priority: 0,
+		};
+
+		function link(scope, element, attrs) {
+		}
+	}]);
+
