@@ -1,0 +1,3 @@
+alias ls='ls -hF --color'
+alias ll='ls -hF -l --color'
+export PATH=$PATH:/c/dotfiles
