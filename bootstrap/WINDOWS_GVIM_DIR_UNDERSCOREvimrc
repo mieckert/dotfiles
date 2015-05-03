@@ -2,8 +2,12 @@
 " (Making a backup of the original)
 
 let user_vim_rc = "C:/cygwin/home/" . $USER . "/dotfiles/vimrc"
+let username_vim_rc = "C:/cygwin/home/" . $USERNAME . "/dotfiles/vimrc"
+
 if filereadable(user_vim_rc)
     :execute 'source '.fnameescape(user_vim_rc)
+elseif filereadable(username_vim_rc)
+    :execute 'source '.fnameescape(username_vim_rc)
 elseif filereadable("C:/dotfiles/vimrc")
     source C:/dotfiles/vimrc
 else
