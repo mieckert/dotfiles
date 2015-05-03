@@ -1,9 +1,11 @@
-" Copy this file to file C:\Program files (x86)\Vim\_vimrc
+" Copy this file to file C:/Program files (x86)/Vim/_vimrc
 " (Making a backup of the original)
-if filereadable("C:\cygwin\home\meckert\dotfiles\vimrc")
-    source C:\cygwin\home\meckert\dotfiles\vimrc
+
+let user_vim_rc = "C:/cygwin/home/" . $USER . "/dotfiles/vimrc"
+if filereadable(user_vim_rc)
+    :execute 'source '.fnameescape(user_vim_rc)
 elseif filereadable("C:/dotfiles/vimrc")
-    source C:\dotfiles\vimrc
+    source C:/dotfiles/vimrc
 else
 	:echom "Did not find a dotfiles directory with a vimrc"
 end
