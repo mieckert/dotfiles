@@ -46,11 +46,14 @@ noremap <leader>h :tabnew\|help\|only<cr>
 nnoremap <cr> <C-]>
 nnoremap <C-j> <C-]>
 set keymodel-=stopsel
-set guifont=Consolas:h12:cANSI
 set tabstop=4
 set shiftwidth=4
 set expandtab
 
+set guifont=Consolas:h12:cANSI
+if has("gui_macvim")
+    set guifont=Menlo\ Regular:h16
+endif
 
 if has("gui_running")
   set columns=120

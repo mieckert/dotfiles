@@ -1,16 +1,25 @@
 #!/bin/bash
 
-export TEMP=C:\\temp
-export TMP=C:\\temp
+opts=""
 
 if   [[ "$OSTYPE" == "cygwin" ]]
 then
     GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+    export TEMP=C:\\temp
+    export TMP=C:\\temp
 elif [[ "$OSTYPE" == "msys" ]]
 then
     GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+    export TEMP=C:\\temp
+    export TMP=C:\\temp
+elif [[ "$OSTYPE" == darwin* ]]
+then
+    echo DARWIN
+    opts="-g"
+    GVIM_EXE='/Applications/MacVim.app/Contents/MacOS/Vim'
 else
-    GVIM_EXE=gvim
+    echo "unknown OSTYPE $OSTYPE"
+    exit 1
 fi
 
 
@@ -20,7 +29,6 @@ then
 else
     IFS='#'
     params=""
-    opts=""
 
     for i in $@; do
         if   [[ $i == -* ]]
