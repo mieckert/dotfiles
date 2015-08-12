@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ADMIN_ID=`force query "SELECT Id FROM User WHERE Profile.Name='System Administrator'" --format:csv \
+    | sed -e '/"Id"/d' \
+    | sed -e 's/"//g' `
+force record update User $ADMIN_ID UserPreferencesApexPagesDeveloperMode:true

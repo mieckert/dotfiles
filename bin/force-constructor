@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CLASSNAME=$1
+(
+    echo "new $CLASSNAME(";
+    force field list $CLASSNAME \
+        | sed -e "s/: \(.*\)$/ = \'\1\'/" \
+        | sed -e "$ ! s/$/,/" \
+        | sed -e 's/^/    /';
+    echo ");"
+) | tee >(pbcopy)

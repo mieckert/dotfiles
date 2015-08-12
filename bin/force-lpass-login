@@ -1,0 +1,6 @@
+#!/bin/bash
+
+lpass show -G $1 | grep --color=always -e "Username:" -e "Password:" -e "\[id:.*\]"
+
+#lpass ls | grep -i $1 | sed -e 's/.*\[id: \(.*\)\]/\1/' | xargs -n 1 lpass show
+

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+force query $1 --format:csv \
+    | sed -e '/"Id"/d' \
+    | sed -e 's/"//g'

@@ -14,7 +14,6 @@ then
     export TMP=C:\\temp
 elif [[ "$OSTYPE" == darwin* ]]
 then
-    echo DARWIN
     opts="-g"
     GVIM_EXE='/Applications/MacVim.app/Contents/MacOS/Vim'
 else

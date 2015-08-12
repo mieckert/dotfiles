@@ -94,8 +94,8 @@ source $VIMRUNTIME/menu.vim
 " See http://stackoverflow.com/questions/2106138/rearrange-tabs-with-the-mouse-in-gvim
 nnoremap <silent> <C-S-PageUp> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
 inoremap <silent> <C-S-PageUp> <C-O>:execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
-nnoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . tabpagenr()<CR>
-inoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . tabpagenr()<CR>
+nnoremap <silent> <C-S-PageDown> :execute 'silent! tabmove ' . (tabpagenr())<CR>
+inoremap <silent> <C-S-PageDown> <C-O>:execute 'silent! tabmove ' . (tabpagenr())<CR>
 
 
 " Autocompletion with CTRL-space
