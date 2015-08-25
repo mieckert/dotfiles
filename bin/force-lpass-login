@@ -1,6 +1,86 @@
-#!/bin/bash
+#!/usr/local/bin/node
 
-lpass show -G $1 | grep --color=always -e "Username:" -e "Password:" -e "\[id:.*\]"
+var child_process = require('child_process');
+var inquirer = require('inquirer');
+require('string').extendPrototype();
 
-#lpass ls | grep -i $1 | sed -e 's/.*\[id: \(.*\)\]/\1/' | xargs -n 1 lpass show
+var node_binary = process.argv.shift();
+var node_script = process.argv.shift();
+var search_string = process.argv.shift();
+
+child_process.exec("lpass show -G \'" + search_string + "\'", function(error, stdout, stderr) {
+    var lines = stdout.toString().split('\n');
+
+    if(lines.length == 0 || lines[0].isEmpty()) {
+        console.log(stderr);
+        process.exit();
+    }
+
+    if(lines[0].startsWith('Multiple matches found.')) {
+        lines.shift();
+
+        var matches = [];
+        var questions = [{
+            type: "list",
+            name: "selected",
+            message: "Multiple matches, please select:",
+            choices: matches
+        }];
+
+        lines.forEach(function(line) {
+            var result = line.match(/^(.*) \[id: (.*)\]$/);
+            if(result) {
+                matches.push({
+                    name: result[1],
+                    value: result[2]
+                })
+            }
+        });
+
+        inquirer.prompt(questions, function(answers) {
+            var id = answers.selected;
+            child_process.exec('lpass show ' + id, function(error, stdout, stderr) {
+                var lines = stdout.toString().split('\n');
+                if(lines.length == 0 || lines[0].startsWith('Multiple matches found.')) {
+                    console.log(stderr);
+                    console.log(stdout);
+                    process.exit();
+                }
+                forceLogin(lines)
+            });
+        });
+        
+
+    }
+    else {
+        forceLogin(lines); 
+    }
+})
+
+function forceLogin(lines) {
+    var username;
+    var password;
+    var url = "login.salesforce.com";
+    lines.forEach(function(line) {
+        if( line.startsWith('Username: ') ) {
+            username = line.match(/^Username: (.*)$/)[1];
+        }
+        if( line.startsWith('Password: ') ) {
+            password = line.match(/Password: (.*)$/)[1];
+        }
+        if( line.startsWith('URL: https://') ) {
+            url = line.match(/URL: https:\/\/(.*)$/)[1];
+        }
+    });
+    // TODO: take care of -i parameter for logins to http://test.salesforce.com etc.
+    var cmd = "force login -u=" + username + " -p=\'" + password + "\'" + " -i=" + url;
+    child_process.exec(cmd, function(error, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+    });
+}
+
+//lpass show -G $1 | grep --color=always -e "Username:" -e "Password:" -e "\[id:.*\]"
+
+//lpass ls | grep -i $1 | sed -e 's/.*\[id: \(.*\)\]/\1/' | xargs -n 1 lpass show
 

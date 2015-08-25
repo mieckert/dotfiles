@@ -1,0 +1,9 @@
+#!/bin/bash
+
+obj = "$1"
+
+force field list $obj \
+    sed -e '/^CreatedById:/d'
+    sed -e '/^CreatedDate:/d'
+    sed -e '/^IsDeleted:/d'
+    sed -e '/^CreatedById:/d'

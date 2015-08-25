@@ -1,0 +1,11 @@
+#!/bin/bash
+echo Username: $1
+echo Orgname: $2
+
+if [ -z "$1" -o -z "$2" ]; then
+    echo Username or Orgname empty
+    exit 1
+fi
+
+lpass generate --sync=now --clip --no-symbols --username=$1 --url="https://login.salesforce.com" "Demos/$2" 12
+lpass sync

@@ -1,0 +1,1 @@
+for i in *.png; do i=`basename $i .png`; convert $i.png -fill \#000066 -opaque black ${i}_blue.png; done

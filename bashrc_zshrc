@@ -1,0 +1,17 @@
+alias ls='ls -Gp'
+alias ll='ls -lGp'
+alias force='~/Applications/force'
+
+export PATH="/usr/local/heroku/bin:$PATH"
+export PATH="/Users/meckert/dotfiles/bin:$PATH"
+if   [ -n "$ZSH_NAME" ]; then
+    autoload -U colors && colors
+    typeset -Ag FX FG BG
+    for color in {000..255}; do
+        FG[$color]="%{[38;5;${color}m%}"
+        BG[$color]="%{[48;5;${color}m%}"
+    done
+    export PROMPT="%{$FG[135]%}%~ \$%{$reset_color%} "
+else
+    export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
+fi

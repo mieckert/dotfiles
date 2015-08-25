@@ -1,0 +1,10 @@
+#!/bin/bash
+
+input="$1"
+base=${input%.*}
+
+#echo $input $base
+
+convert "$input" -resize 200x55 "${base}_desktop.png"
+convert "$input" -resize 460x560 "${base}_mobile.png"
+
