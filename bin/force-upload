@@ -1,0 +1,102 @@
+#!/usr/local/bin/node
+
+var child_process = require('child_process');
+
+
+var getopt_config = [
+    ['f' , 'folder=ARG'              , 'Exact match for folder name or developer name'],
+    ['F' , 'folder-like=ARG]'        , 'Like match for folder name or developer name'],
+    ['n' , 'folder-name=ARG'         , 'Exact match for folder name'],
+    ['N' , 'folder-name-like=ARG]'   , 'Like match for folder name'],
+    ['d' , 'folder-devname=ARG'      , 'Exact match for folder developer name'],
+    ['D' , 'folder-devname-like=ARG' , 'Like match for folder developer name'],
+    ['i' , 'folder-id=ARG]'          , 'Folder Id'],
+    ['h' , 'help'                    , 'display this help'],
+]
+
+var getopt = require('node-getopt').create(getopt_config).bindHelp().parseSystem();
+
+var options = getopt.options;
+var filenames = getopt.argv;
+
+if(options.length > 1) {
+    console.log("Error: Please specify only one argument out of -f, -F, -n, -N, -d, -D, -i for the folder name query");
+    process.exit(1);
+}
+
+var where = "";
+if      (options['folder']) { 
+    where = "Name = '" + options['folder'] + "' OR " + 
+        "DeveloperName = '" + options['folder'] + "'";
+}
+else if (options['folder-like']) {
+    where = "Name like '%" + options['folder-like'] + "%' OR " + 
+        "DeveloperName like '%" +  options['folder-like'] + "%'";
+}
+else if (options['folder-name']) {
+    where = "Name = '" + options['folder-name'] + "'";
+}
+else if (options['folder-name-like']) {
+    where = "Name like '%" + options['folder-name-like'] + "%'";
+}
+else if (options['folder-devname']) {
+    where = "DeveloperName = '" + options['folder-devname'] + "'";
+}
+else if (options['folder-devname-like']) {
+    where = "DeveloperName like '%" + options['folder-devname-like'] + "%'";
+}
+else if (options['folder-id']) {
+    where = "Id = '" + options['folder'] + "'";
+}
+else {
+    console.log("Error: No folder specified.  Use -f, -F, -n, -N, -d, -D, or -i to specify a folder name.");
+    process.exit(1);
+}
+
+var folder_query = "SELECT Id FROM Folder WHERE " + where;
+
+child_process.exec("force query \"" + folder_query + "\" --format:csv", function(error, stdout, stderr) {
+    var lines = stdout.toString().split('\n');
+    if(lines[0] != "\"Id\"\n") {
+        lines.shift();
+    }
+    else {
+        console.log("ERROR");
+        console.log(stderr);
+        console.log(stdout);
+        process.exit(1);
+    }
+
+    var folder_ids = [];
+    lines.forEach(function(line){
+        var m = line.match(/^"(.*)"$/);
+        if(m) {
+            folder_ids.push(m[1]);
+        }
+    });
+
+    if(folder_ids.length > 1) {
+        console.log("Multiple matches found in folder query!");
+        process.exit(1);
+    }
+
+    var folder_id = folder_ids[0];
+
+    filenames.forEach(function(filename) {
+        var name = filename;
+        var devname = filename.replace(/[^0-9a-zA-Z]/g, "_");
+        var contentType = "image/png"; // TODO
+        var command = "force record create Document " + 
+                "FolderId:" + folder_id + " " + 
+                "Name:\"" + name + "\" " +
+                "DeveloperName:\"" + devname + "\" " +
+                "ContentType:\"" + contentType + "\" " + 
+                "isPublic:true " + 
+                "body:`base64 " + filename + "`";
+        console.log(command);
+        var stdout = child_process.execSync(command);
+        console.log(stdout.toString());
+    });
+});
+
+//force record create Document FolderId:00l24000000J1IZAA0 Name:"test2" DeveloperName:"test2" ContentType:"image/jpg" isPublic:true body:`base64 servlet.jpg`

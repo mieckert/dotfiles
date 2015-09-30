@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "inquirer": "^0.9.0",
+    "nforce": "^1.2.3",
+    "node-getopt": "^0.2.3",
     "string": "^3.3.1"
   }
 }

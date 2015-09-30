@@ -72,15 +72,10 @@ function forceLogin(lines) {
             url = line.match(/URL: https:\/\/(.*)$/)[1];
         }
     });
-    // TODO: take care of -i parameter for logins to http://test.salesforce.com etc.
     var cmd = "force login -u=" + username + " -p=\'" + password + "\'" + " -i=" + url;
     child_process.exec(cmd, function(error, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
 }
-
-//lpass show -G $1 | grep --color=always -e "Username:" -e "Password:" -e "\[id:.*\]"
-
-//lpass ls | grep -i $1 | sed -e 's/.*\[id: \(.*\)\]/\1/' | xargs -n 1 lpass show
 

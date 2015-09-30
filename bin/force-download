@@ -1,0 +1,24 @@
+#!/usr/local/bin/node
+
+var child_process = require('child_process');
+var fs = require('fs');
+
+var home = process.env.HOME;
+var force_dir = home + "/.force";
+
+var current = fs.readFileSync(force_dir + "/current/account").toString();
+var access_str = fs.readFileSync(force_dir + "/accounts/" + current).toString();
+var access = JSON.parse(access_str);
+
+process.argv.shift();
+process.argv.shift();
+
+var documentId = process.argv.shift();
+
+console.log(access.AccessToken);
+
+var command = "curl " + access.InstanceUrl + 
+    "/services/data/v34.0/sobjects/Document/" + documentId + "/Body " + 
+    "-H 'Authorization: Bearer " + access.AccessToken + 
+    "' > " + documentId;
+var stdout = child_process.execSync(command);
