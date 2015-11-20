@@ -1,6 +1,7 @@
 alias ls='ls -Gp'
 alias ll='ls -lGp'
 alias force='~/Applications/force'
+alias lpass-login="lpass login $LPASS_EMAIL"
 
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="/Users/meckert/dotfiles/bin:$PATH"

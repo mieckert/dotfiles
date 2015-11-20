@@ -1,5 +1,7 @@
 #!/usr/local/bin/node
 
+/* vim: set filetype=javascript : */ 
+
 var child_process = require('child_process');
 var inquirer = require('inquirer');
 require('string').extendPrototype();
@@ -12,8 +14,15 @@ child_process.exec("lpass show -G \'" + search_string + "\'", function(error, st
     var lines = stdout.toString().split('\n');
 
     if(lines.length == 0 || lines[0].isEmpty()) {
-        console.log(stderr);
-        process.exit();
+        if( stderr.toString().contains('Could not find decryption key. Perhaps you need to login') ) {
+            // TODO lpass login
+            console.log(stderr);
+            process.exit();
+        }
+        else {
+            console.log(stderr);
+            process.exit();
+        }
     }
 
     if(lines[0].startsWith('Multiple matches found.')) {
