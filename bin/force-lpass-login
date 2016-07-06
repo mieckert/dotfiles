@@ -1,28 +1,67 @@
 #!/usr/local/bin/node
 
-/* vim: set filetype=javascript : */ 
+/* vim: set filetype=javascript : */
 
 var child_process = require('child_process');
-var inquirer = require('inquirer');
+var exec = require('child-process-promise').exec;
+var spawn = require('child-process-promise').spawn;
+
+var inquirer = require('inquirer-promise');
 require('string').extendPrototype();
 
 var node_binary = process.argv.shift();
 var node_script = process.argv.shift();
 var search_string = process.argv.shift();
 
-child_process.exec("lpass show -G \'" + search_string + "\'", function(error, stdout, stderr) {
-    var lines = stdout.toString().split('\n');
+/*
+spawn("lpass", ["login", process.env["LPASS_EMAIL"]], {stdio: 'inherit'})
+    .then(function(result) {
+        console.log("LOGIN SUCCESS");
+    })
+    .fail(function(error) {
+        console.log("LOGIN FAIL");
+        console.log(error);
+    });
+*/
+/*
+inquirer.prompt({
+    type: "list",
+    name: "selected",
+    message: "Multiple matches, please select:",
+    choices: ["yes", "mo"]
+}, function(){});
+*/
+
+lpassShowG(search_string)
+.fail(function(error) {
+    console.log("Plese log into lpass");
+    return spawn("lpass", ["login", process.env["LPASS_EMAIL"]], {stdio: 'inherit'})
+        .then(function(result) {
+            return lpassShowG(search_string);
+        });
+})
+.then( lpassShowGSuccess )
+.then( forceLogin )
+.fail(function(error) {
+    if(error.message.match(/lpass login.*failed/)) {
+        console.log("Aborting, login to lpass failed.");
+    }
+    else {
+        console.log(error);
+    }
+})
+.done();
+
+function lpassShowG(search_string) {
+    return exec("lpass show -G \'" + search_string + "\'");
+}
+
+function lpassShowGSuccess(result) {
+    var lines = result.stdout.toString().split('\n');
 
     if(lines.length == 0 || lines[0].isEmpty()) {
-        if( stderr.toString().contains('Could not find decryption key. Perhaps you need to login') ) {
-            // TODO lpass login
-            console.log(stderr);
-            process.exit();
-        }
-        else {
-            console.log(stderr);
-            process.exit();
-        }
+        console.log(result.stderr);
+        process.exit();
     }
 
     if(lines[0].startsWith('Multiple matches found.')) {
@@ -46,25 +85,29 @@ child_process.exec("lpass show -G \'" + search_string + "\'", function(error, st
             }
         });
 
-        inquirer.prompt(questions, function(answers) {
-            var id = answers.selected;
-            child_process.exec('lpass show ' + id, function(error, stdout, stderr) {
-                var lines = stdout.toString().split('\n');
+        return (
+            inquirer.prompt(questions)
+            .then(function(answers) {
+                console.log("IN ANSWERS");
+                var id = answers.selected;
+                return exec('lpass show ' + id);
+            })
+            .then(function(result) {
+                console.log("IN RESULTS");
+                var lines = result.stdout.toString().split('\n');
                 if(lines.length == 0 || lines[0].startsWith('Multiple matches found.')) {
-                    console.log(stderr);
-                    console.log(stdout);
+                    console.log(result.stderr);
+                    console.log(result.stdout);
                     process.exit();
                 }
-                forceLogin(lines)
-            });
-        });
-        
-
+                return lines;
+            })
+        );
     }
     else {
-        forceLogin(lines); 
+        return lines;
     }
-})
+}
 
 function forceLogin(lines) {
     var username;
@@ -87,4 +130,3 @@ function forceLogin(lines) {
         console.log(stderr);
     });
 }
-

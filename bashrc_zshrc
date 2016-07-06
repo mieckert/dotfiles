@@ -16,3 +16,15 @@ if   [ -n "$ZSH_NAME" ]; then
 else
     export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
 fi
+
+if   [ -d "/Users/meckert/bin/gradle-2.13" ]; then
+    export GRADLE_HOME="/Users/meckert/bin/gradle-2.13/"
+    export PATH="$PATH:/Users/meckert/bin/gradle-2.13/bin"
+    export ANDROID_HOME=/Users/meckert/Library/Android/sdk 
+    export PATH="$PATH:/Users/meckert/Library/Android/sdk/platform-tools"
+fi
+
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
+
+export PATH="$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin"
+export DATABASE_URL=postgres:///$(whoami)
