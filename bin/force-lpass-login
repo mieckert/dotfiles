@@ -81,19 +81,19 @@ function lpassShowGSuccess(result) {
                 matches.push({
                     name: result[1],
                     value: result[2]
-                })
+                });
             }
         });
 
         return (
             inquirer.prompt(questions)
             .then(function(answers) {
-                console.log("IN ANSWERS");
+                //console.log("IN ANSWERS");
                 var id = answers.selected;
                 return exec('lpass show ' + id);
             })
             .then(function(result) {
-                console.log("IN RESULTS");
+                //console.log("IN RESULTS");
                 var lines = result.stdout.toString().split('\n');
                 if(lines.length == 0 || lines[0].startsWith('Multiple matches found.')) {
                     console.log(result.stderr);
@@ -124,7 +124,9 @@ function forceLogin(lines) {
             url = line.match(/URL: https:\/\/(.*)$/)[1];
         }
     });
+
     var cmd = "force login -u=" + username + " -p=\'" + password + "\'" + " -i=" + url;
+    console.log("CMD " + cmd);
     child_process.exec(cmd, function(error, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);

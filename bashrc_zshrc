@@ -2,6 +2,7 @@ alias ls='ls -Gp'
 alias ll='ls -lGp'
 alias force='~/Applications/force'
 alias lpass-login="lpass login $LPASS_EMAIL"
+alias findjs='find . -type f -name '"'"'*.js'"'"' -and -not -path '"'"'*node_modules*'"'"' -and -not -path '"'"'*plugins*'"'"' -and -not -path '"'"'*bower_components*'"'"
 
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="/Users/meckert/dotfiles/bin:$PATH"
@@ -28,3 +29,7 @@ export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
 
 export PATH="$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin"
 export DATABASE_URL=postgres:///$(whoami)
+
+export HISTSIZE=1000000
+export HISTFILE="$HOME/.history"
+export SAVEHIST=$HISTSIZE
