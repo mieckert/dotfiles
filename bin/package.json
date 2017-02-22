@@ -9,9 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.4.7",
     "child-process-promise": "^1.1.0",
     "inquirer": "^0.9.0",
     "inquirer-promise": "0.0.3",
+    "lodash": "^4.17.4",
     "nforce": "^1.2.3",
     "node-getopt": "^0.2.3",
     "string": "^3.3.1"

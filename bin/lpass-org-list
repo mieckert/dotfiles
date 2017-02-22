@@ -1,0 +1,131 @@
+#!/usr/local/bin/node
+
+/* vim: set filetype=javascript : */
+
+var Promise = require('bluebird');
+
+var child_process = require('child_process');
+var child_process_promise = require('child-process-promise');
+var exec = function(cmdline) { return Promise.resolve( child_process_promise.exec(cmdline) ); };
+//var spawn = require('child-process-promise').spawn;
+var _ = require('lodash');
+var fs = require('fs');
+
+var node_binary = process.argv.shift();
+var node_script = process.argv.shift();
+var search_string = process.argv.shift();
+
+var filename = "orgs.csv";
+var header = "orgId,expDate,username,name,folder,lpassId";
+fs.appendFileSync(filename, header + "\n");
+
+exec("lpass ls --color=never")
+.then(function(result){
+    var lines = result.stdout.toString().split('\n');
+    //console.log(lines);
+
+    var orgs = _(lines).filter( function(line) {
+        return line.startsWith("Demos");
+    })
+    .map( function(line) {
+        //console.log(line);
+        var m = line.match(/Demos(\\(.*))?\/(.*) \[id: (.*)\]/);
+        var org = {
+            folder:  m[2] || "",
+            name:    m[3],
+            lpassId: m[4]
+        };
+        return org;
+    })
+    .value();
+
+    return orgs;
+    /*
+    _(orgs).forEach(function(org){
+        console.log("ORG:");
+        console.log(org);
+    });
+    */
+})
+.mapSeries(function(org) {
+    return exec('lpass show ' + org.lpassId)
+        .then(function(result){
+            var lines = result.stdout.toString().split('\n');
+            lines.forEach(function(line) {
+                if( line.startsWith('Username: ') ) {
+                    org.username = line.match(/^Username: (.*)$/)[1];
+                }
+                if( line.startsWith('Password: ') ) {
+                    org.password = line.match(/Password: (.*)$/)[1];
+                }
+                if( line.startsWith('URL: https://') ) {
+                    org.url = line.match(/URL: https:\/\/(.*)$/)[1];
+                }
+            });
+            return org;
+        });
+})
+.mapSeries(function(org){
+    console.log("ORG: " + org.name + " " + org.username);
+    return exec('force login -u=' + org.username + ' -p=\'' + org.password + '\' -i=login.salesforce.com')
+        .then(function(result) {
+            var lines = result.stdout.toString().split('\n');
+            //console.log(lines);
+            org.loginOk = false;
+            lines.forEach(function(line) {
+                if( line.startsWith('Logged in as') ) {
+                    org.loginOk = true;
+                }
+            });
+            if(!org.loginOk) {
+                throw Error("Login failed");
+            }
+        })
+        .then(function(){
+            return exec('force query "SELECT Id,TrialExpirationDate FROM Organization" --format:csv');
+        })
+        .then(function(result) {
+            var lines = result.stdout.toString().split('\n');
+            //console.log(lines);
+            try {
+                var headers = _(lines[0].split(",")).map(function(h) { return _.trim(h, '"'); }).value();
+                var entries = _(lines[1].split(",")).map(function(e) { return _.trim(e, '"'); }).value();
+
+                console.log("headers");
+                console.log(headers);
+                console.log("entries");
+                console.log(entries);
+
+                var v = {};
+                for(var i=0; i<headers.length; i++) {
+                    v[headers[i]] = entries[i];
+                }
+                org.orgId = v["Id"].substring(0,15),
+                org.expDate = v["TrialExpirationDate"].split('T')[0];
+            }
+            catch(e) {
+                console.log(e);
+                org.orgId = "ERROR";
+                org.expDate = "ERROR";
+                console.log(lines);
+                throw Error("ExpDate Query failed");
+            }
+            console.log("EXPDATE: " + org.expDate);
+        })
+        .then(function(){
+            return exec('force logout');
+        })
+        .then(function(){
+            return org;
+        })
+        .catch(function(err) {
+            console.log("LOGIN FAILED (or other error)");
+            console.log(err);
+            return org;
+        });
+})
+.mapSeries(function(org) {
+    // "orgId,expDate,username,name,folder,lpassId";
+    var line = org.orgId + "," + org.expDate + "," + org.username + "," + org.name + "," + org.folder + "," + org.lpassId;
+    fs.appendFileSync(filename, line + "\n");
+});
