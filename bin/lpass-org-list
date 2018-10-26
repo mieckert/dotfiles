@@ -120,7 +120,9 @@ exec("lpass ls --color=never")
         })
         .catch(function(err) {
             console.log("LOGIN FAILED (or other error)");
-            console.log(err);
+            console.log(err.stderr);
+            var errorMsg = _.trim( err.stderr.toString().split('\n')[0] );
+            org.expDate = "\"" + errorMsg.replace(/^ERROR: /g, '') + "\"";
             return org;
         });
 })

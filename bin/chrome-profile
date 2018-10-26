@@ -1,0 +1,21 @@
+#!/bin/bash
+
+export PROFILE_PARENT_DIR="$HOME/Library/Application Support/Google/Chrome"
+
+pushd "$PROFILE_PARENT_DIR" > /dev/null
+
+for DIR in Default Profile*; do
+    NAME=`cat "$DIR/Preferences" | jq .profile.name -r`
+    if [ $1 = $NAME ]; then 
+        PROFILE_DIR=$DIR
+        break
+    fi
+done
+
+popd > /dev/null
+
+if [ -n "$PROFILE_DIR" ]; then
+    echo "$PROFILE_DIR"
+    open --new -a /Applications/Google\ Chrome.app --args --profile-directory="$PROFILE_DIR" -d $2
+fi
+

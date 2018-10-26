@@ -14,16 +14,6 @@ var node_script = process.argv.shift();
 var search_string = process.argv.shift();
 
 /*
-spawn("lpass", ["login", process.env["LPASS_EMAIL"]], {stdio: 'inherit'})
-    .then(function(result) {
-        console.log("LOGIN SUCCESS");
-    })
-    .fail(function(error) {
-        console.log("LOGIN FAIL");
-        console.log(error);
-    });
-*/
-/*
 inquirer.prompt({
     type: "list",
     name: "selected",
@@ -34,10 +24,15 @@ inquirer.prompt({
 
 lpassShowG(search_string)
 .fail(function(error) {
-    console.log("Plese log into lpass");
+    console.log("Please log into lpass");
     return spawn("lpass", ["login", process.env["LPASS_EMAIL"]], {stdio: 'inherit'})
         .then(function(result) {
             return lpassShowG(search_string);
+        })
+        .fail(function(error) {
+            console.log("LOGIN FAIL");
+            console.log(error);
+            process.exit(-1);
         });
 })
 .then( lpassShowGSuccess )

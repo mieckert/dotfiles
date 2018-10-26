@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ -n "$1" ] && [ "$1" != "-*" ]; then
+    PROFILE=$1
+    shift
+else
+    PROFILE=Blue
+fi
+
+URL=`sfdx force:org:open -r $* | sed -e 's/^.*URL: \(.*\)$/\1/'`
+
+chrome-profile $PROFILE $URL

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+touch package.xml
+rm package.xml
+touch package.xml
+
+MYPATH="`dirname \"$0\"`"
+BUILDFILE="$MYPATH/build.xml"
+USERNAME=$1
+PASSWORD=$2
+
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+
+echo '<?xml version="1.0" encoding="UTF-8"?>' >> package.xml
+echo '<Package xmlns="http://soap.sforce.com/2006/04/metadata">' >> package.xml
+
+TYPES=`ant describeMetadata -buildfile $BUILDFILE -Dsf.username=$USERNAME -Dsf.password=$PASSWORD -Dsf.serverurl=https://login.salesforce.com | grep 'XMLName:' | sed -e 's/.*: //g'`
+for TYPE in $TYPES; do
+    echo '<types>' >> package.xml
+    echo '<name>'${TYPE}'</name>' >> package.xml
+
+    NAMES=`ant listMetadata -Dsf.metadataType=$TYPE -buildfile $BUILDFILE -Dsf.username=$USERNAME -Dsf.password=$PASSWORD -Dsf.serverurl=https://login.salesforce.com | grep "FullName" | sed -e 's/.*: //g' | sed -e 's/\/.*//g'`
+    for NAME in $NAMES; do
+        echo '<members>'${NAME}'</members>' >> package.xml
+    done
+
+    echo '</types>' >> package.xml
+done
+
+echo '<version>39.0</version>' >> package.xml
+echo '</Package>' >> package.xml
