@@ -1,0 +1,7 @@
+[core]
+	editor = /usr/bin/vim
+[user]
+	name = XXX XXX
+	email = XXX@XXX.XX
+[push]
+	default = matching

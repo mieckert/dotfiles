@@ -1,0 +1,5 @@
+export LPASS_EMAIL=XXX@XXX.XX
+. ~/dotfiles/bashrc_zshrc
+eval $(/usr/libexec/path_helper -s)
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

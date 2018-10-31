@@ -121,7 +121,7 @@ function forceLogin(lines) {
     });
 
     var cmd = "force login -u=" + username + " -p=\'" + password + "\'" + " -i=" + url;
-    console.log("CMD " + cmd);
+    //console.log("CMD " + cmd);
     child_process.exec(cmd, function(error, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
