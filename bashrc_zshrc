@@ -13,7 +13,10 @@ if   [ -n "$ZSH_NAME" ]; then
         FG[$color]="%{[38;5;${color}m%}"
         BG[$color]="%{[48;5;${color}m%}"
     done
-    export PROMPT="%{$FG[135]%}%~ \$%{$reset_color%} "
+    #SEP=' '
+    SEP=$'\n'
+    export PROMPT="%{$FG[135]%}%~${SEP}\$%{$reset_color%} "
+    #export PROMPT='%h %~> '
 else
     export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
 fi
@@ -33,3 +36,8 @@ export DATABASE_URL=postgres:///$(whoami)
 export HISTSIZE=1000000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
+
+export EDITOR=vim
+
+alias ssh_to_home="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST"
+alias ssh_tunnel_for_printer="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST -L 1631:$SSH_TO_HOME_PRINTER:631 -N"

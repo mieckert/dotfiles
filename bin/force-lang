@@ -1,0 +1,16 @@
+#!/bin/bash
+
+language=$1
+
+if [[ -z $language ]] || [[ $language=="en" ]]; then
+    language=en_US
+fi
+
+UserId=`force whoami | grep -o "^Id: \(.*\)" | sed -e 's/Id: //'`
+
+if [[ -z $UserId ]]; then
+    echo "Not logged in..."
+    exit 1
+fi
+
+force record update User ${UserId} LanguageLocaleKey:${language}

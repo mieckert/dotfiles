@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -n "$1" ] && [ "$1" != "-*" ]; then
+if [[ -n "$1" ]] && [[ "$1" != -* ]]; then
     PROFILE=$1
     shift
 else
