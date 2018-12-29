@@ -1,0 +1,4 @@
+. $HOME/.privateconf
+. $HOME/dotfiles/bashrc_zshrc
+
+#[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
