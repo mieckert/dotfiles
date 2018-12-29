@@ -1,11 +1,20 @@
-alias ls='ls -Gp'
-alias ll='ls -lGp'
-alias force='~/Applications/force'
+# vi: ft=sh
+
+export PATH="$HOME/dotfiles/bin:$PATH"
+
+alias ls='ls -Gp --color'
+alias ll='ls -lGp --color'
 alias lpass-login="lpass login $LPASS_EMAIL"
 alias findjs='find . -type f -name '"'"'*.js'"'"' -and -not -path '"'"'*node_modules*'"'"' -and -not -path '"'"'*plugins*'"'"' -and -not -path '"'"'*bower_components*'"'"
 
-export PATH="/usr/local/heroku/bin:$PATH"
-export PATH="/Users/meckert/dotfiles/bin:$PATH"
+alias ssh_to_home="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST"
+alias ssh_tunnel_for_printer="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST -L 1631:$SSH_TO_HOME_PRINTER:631 -N"
+
+export HISTSIZE=1000000
+export HISTFILE="$HOME/.history"
+export SAVEHIST=$HISTSIZE
+export EDITOR=vim
+
 if   [ -n "$ZSH_NAME" ]; then
     autoload -U colors && colors
     typeset -Ag FX FG BG
@@ -21,23 +30,18 @@ else
     export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
 fi
 
-if   [ -d "/Users/meckert/bin/gradle-2.13" ]; then
-    export GRADLE_HOME="/Users/meckert/bin/gradle-2.13/"
-    export PATH="$PATH:/Users/meckert/bin/gradle-2.13/bin"
-    export ANDROID_HOME=/Users/meckert/Library/Android/sdk 
-    export PATH="$PATH:/Users/meckert/Library/Android/sdk/platform-tools"
+if [[ "$OSTYPE" == darwin* ]]; then
+    alias force='~/Applications/force'
+    export PATH="/usr/local/heroku/bin:$PATH"
+    export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
+    export PATH="$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin"
+    export DATABASE_URL=postgres:///$(whoami)
+
+    if   [ -d "/Users/meckert/bin/gradle-2.13" ]; then
+        export GRADLE_HOME="/Users/meckert/bin/gradle-2.13/"
+        export PATH="$PATH:/Users/meckert/bin/gradle-2.13/bin"
+        export ANDROID_HOME=/Users/meckert/Library/Android/sdk 
+        export PATH="$PATH:/Users/meckert/Library/Android/sdk/platform-tools"
+    fi
 fi
 
-export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
-
-export PATH="$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin"
-export DATABASE_URL=postgres:///$(whoami)
-
-export HISTSIZE=1000000
-export HISTFILE="$HOME/.history"
-export SAVEHIST=$HISTSIZE
-
-export EDITOR=vim
-
-alias ssh_to_home="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST"
-alias ssh_tunnel_for_printer="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST -L 1631:$SSH_TO_HOME_PRINTER:631 -N"

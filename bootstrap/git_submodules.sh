@@ -1,2 +1,3 @@
-git submodules init
-git submodules update
+#!/bin/bash
+git submodule init
+git submodule update

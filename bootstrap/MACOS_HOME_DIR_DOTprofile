@@ -1,7 +1,2 @@
-#export PATH="/usr/local/heroku/bin:$PATH"
-#export PATH="/Users/meckert/dotfiles/bin:$PATH"
-#export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
-
-#export LPASS_EMAIL=XXX@XXX.XX
-. ~/.privateconf
-. ~/dotfiles/bashrc_zshrc
+. $HOME/.privateconf
+. $HOME/dotfiles/bashrc_zshrc

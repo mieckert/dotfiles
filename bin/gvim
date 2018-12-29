@@ -4,12 +4,12 @@ opts=""
 
 if   [[ "$OSTYPE" == "cygwin" ]]
 then
-    GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+    GVIM_EXE=/cygdrive/c/Program\ Files\ \(x86\)/Vim/vim80/gvim.exe
     export TEMP=C:\\temp
     export TMP=C:\\temp
 elif [[ "$OSTYPE" == "msys" ]]
 then
-    GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim74/gvim.exe
+    GVIM_EXE=/c/Program\ Files\ \(x86\)/Vim/vim80/gvim.exe
     export TEMP=C:\\temp
     export TMP=C:\\temp
 elif [[ "$OSTYPE" == darwin* ]]
