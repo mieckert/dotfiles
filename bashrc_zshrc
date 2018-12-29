@@ -22,8 +22,8 @@ if   [ -n "$ZSH_NAME" ]; then
         FG[$color]="%{[38;5;${color}m%}"
         BG[$color]="%{[48;5;${color}m%}"
     done
-    #SEP=' '
-    SEP=$'\n'
+    SEP=' '
+    #SEP=$'\n'
     export PROMPT="%{$FG[135]%}%~${SEP}\$%{$reset_color%} "
     #export PROMPT='%h %~> '
 else
