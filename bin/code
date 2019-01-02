@@ -22,40 +22,39 @@ then
         echo "Code.exe not found; please correct SEARCH_LIST"
         exit 1
     fi
+
+    if [[ -z "$@" ]]
+    then
+        eval \"$CODE_EXE\" &
+    else
+        IFS='#'
+        params=""
+
+        for i in $@; do
+            if   [[ $i == -* ]]
+            then
+                opts="$opts $i" 
+            else
+                if   [[ "$OSTYPE" == "cygwin" ]]
+                then
+                    file="`cygpath -w \"$i\"`" 
+                elif [[ "$OSTYPE" == "msys" ]]
+                then
+                    file="`echo $i | sed -re 's/^\/([a-z])\//\1:\//g'`" 
+                else
+                    file=$i
+                fi
+                params="$params \"$file\""
+            fi
+        done
+
+        eval \"$CODE_EXE\" $opts $params &
+    fi
 elif [[ "$OSTYPE" == darwin* ]]
 then
-    echo "TODO: implement for MACOS"
-    exit 1
+    #CODE_EXE="/Applications/Visual Studio Code.app/Contents/MacOS/Electron" 
+    open -a /Applications/Visual\ Studio\ Code.app $*
 else
     echo "unknown OSTYPE $OSTYPE"
     exit 1
-fi
-
-
-if [[ -z "$@" ]]
-then
-    eval \"$CODE_EXE\" &
-else
-    IFS='#'
-    params=""
-
-    for i in $@; do
-        if   [[ $i == -* ]]
-        then
-            opts="$opts $i" 
-        else
-            if   [[ "$OSTYPE" == "cygwin" ]]
-            then
-                file="`cygpath -w \"$i\"`" 
-            elif [[ "$OSTYPE" == "msys" ]]
-            then
-                file="`echo $i | sed -re 's/^\/([a-z])\//\1:\//g'`" 
-            else
-                file=$i
-            fi
-            params="$params \"$file\""
-        fi
-    done
-
-    eval \"$CODE_EXE\" $opts $params &
 fi

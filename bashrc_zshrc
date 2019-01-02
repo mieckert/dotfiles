@@ -2,8 +2,16 @@
 
 export PATH="$HOME/dotfiles/bin:$PATH"
 
-alias ls='ls -Gp --color'
-alias ll='ls -lGp --color'
+
+if [[ "$OSTYPE" == darwin* ]]; then
+    alias ls='ls -Gp'
+    alias ll='ls -lGp'
+else
+    alias ls='ls -p --color'
+    alias ll='ls -lp --color'
+fi
+
+
 alias lpass-login="lpass login $LPASS_EMAIL"
 alias findjs='find . -type f -name '"'"'*.js'"'"' -and -not -path '"'"'*node_modules*'"'"' -and -not -path '"'"'*plugins*'"'"' -and -not -path '"'"'*bower_components*'"'"
 
