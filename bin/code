@@ -9,7 +9,6 @@ then
     SEARCH_LIST="/cygdrive/d/Programs/Microsoft VS Code/Code.exe":"/cygdrive/c/Program Files (x86)/Microsoft VS Code/Code.exe"
     CODE_EXE=""
     for c in $SEARCH_LIST; do
-        echo "Testing: $c"
         if [[ -f $c ]]; then
             CODE_EXE="$c"
             break
@@ -34,7 +33,7 @@ fi
 
 if [[ -z "$@" ]]
 then
-    eval \"$CODE_EXE\" &
+    eval \"$CODE_EXE\" 2>&1 >/dev/null &
 else
     IFS='#'
     params=""
@@ -57,5 +56,5 @@ else
         fi
     done
 
-    eval \"$CODE_EXE\" $opts $params &
+    eval \"$CODE_EXE\" $opts $params 2>&1 >/dev/null &
 fi
