@@ -16,3 +16,9 @@
 [submodule "vimfiles/bundle/tabular"]
 	path = vimfiles/bundle/tabular
 	url = git://github.com/godlygeek/tabular.git
+[submodule "salesforce-cli-zsh-completion"]
+	path = salesforce-cli-zsh-completion
+	url = https://github.com/wadewegner/salesforce-cli-zsh-completion.git
+[submodule "zsh-autosuggestions"]
+	path = zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions

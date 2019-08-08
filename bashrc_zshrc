@@ -18,12 +18,33 @@ alias findjs='find . -type f -name '"'"'*.js'"'"' -and -not -path '"'"'*node_mod
 alias ssh_to_home="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST"
 alias ssh_tunnel_for_printer="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST -L 1631:$SSH_TO_HOME_PRINTER:631 -N"
 
+xmlless() {
+    xmllint --format $1 | less
+}
+
 export HISTSIZE=1000000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
 export EDITOR=vim
 
+add-or-remove-help() {
+    local CURRENT_LINE=$READLINE_LINE 
+    local CURRENT_POINT=$READLINE_POINT
+    if [[ "$CURRENT_LINE" =~ ^[^[:space:]]+[[:space:]]help ]]; then
+        READLINE_LINE=${CURRENT_LINE/ help/}
+        READLINE_POINT=`expr $CURRENT_POINT - 5`
+    else
+        READLINE_LINE=${CURRENT_LINE/ / help }
+        READLINE_POINT=`expr $CURRENT_POINT + 5`
+    fi
+}
+
+bind -x '"\C-x\C-h":add-or-remove-help'
+
 if   [ -n "$ZSH_NAME" ]; then
+    # Set keybindings to EMACS style (e.g. CTRL-A goes to beginning of line)
+    bindkey -e
+
     autoload -U colors && colors
     typeset -Ag FX FG BG
     for color in {000..255}; do
@@ -34,8 +55,15 @@ if   [ -n "$ZSH_NAME" ]; then
     #SEP=$'\n'
     export PROMPT="%{$FG[135]%}%~${SEP}\$%{$reset_color%} "
     #export PROMPT='%h %~> '
+
+    # source $HOME/dotfiles/zsh-autosuggestions/zsh-autosuggestions.zsh
+    # add custom completion scripts
+    fpath=($HOME/dotfiles/salesforce-cli-zsh-completion $fpath)
+    autoload -U compinit
+    compinit
 else
     export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
+    bind -x '"\C-x\C-h":add-or-remove-help'
 fi
 
 if [[ "$OSTYPE" == darwin* ]]; then
