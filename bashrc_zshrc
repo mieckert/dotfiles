@@ -39,8 +39,6 @@ add-or-remove-help() {
     fi
 }
 
-bind -x '"\C-x\C-h":add-or-remove-help'
-
 if   [ -n "$ZSH_NAME" ]; then
     # Set keybindings to EMACS style (e.g. CTRL-A goes to beginning of line)
     bindkey -e
@@ -61,6 +59,7 @@ if   [ -n "$ZSH_NAME" ]; then
     fpath=($HOME/dotfiles/salesforce-cli-zsh-completion $fpath)
     autoload -U compinit
     compinit
+    zstyle ':completion:*' menu select
 else
     export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
     bind -x '"\C-x\C-h":add-or-remove-help'
