@@ -1,0 +1,130 @@
+#!/usr/local/bin/node
+
+/* vim: set filetype=javascript : */
+
+var child_process = require('child_process');
+var exec = require('child-process-promise').exec;
+var spawn = require('child-process-promise').spawn;
+
+var inquirer = require('inquirer-promise');
+require('string').extendPrototype();
+
+var node_binary = process.argv.shift();
+var node_script = process.argv.shift();
+var search_string = process.argv.shift();
+
+/*
+inquirer.prompt({
+    type: "list",
+    name: "selected",
+    message: "Multiple matches, please select:",
+    choices: ["yes", "mo"]
+}, function(){});
+*/
+
+lpassShowG(search_string)
+.fail(function(error) {
+    console.log("Please log into lpass");
+    return spawn("lpass", ["login", process.env["LPASS_EMAIL"]], {stdio: 'inherit'})
+        .then(function(result) {
+            return lpassShowG(search_string);
+        })
+        .fail(function(error) {
+            console.log("LOGIN FAIL");
+            console.log(error);
+            process.exit(-1);
+        });
+})
+.then( lpassShowGSuccess )
+.then( sfdxLogin )
+.fail(function(error) {
+    if(error.message.match(/lpass login.*failed/)) {
+        console.log("Aborting, login to lpass failed.");
+    }
+    else {
+        console.log(error);
+    }
+})
+.done();
+
+function lpassShowG(search_string) {
+    return exec("lpass show -G \'" + search_string + "\'");
+}
+
+function lpassShowGSuccess(result) {
+    var lines = result.stdout.toString().split('\n');
+
+    if(lines.length == 0 || lines[0].isEmpty()) {
+        console.log(result.stderr);
+        process.exit();
+    }
+
+    if(lines[0].startsWith('Multiple matches found.')) {
+        lines.shift();
+
+        var matches = [];
+        var questions = [{
+            type: "list",
+            name: "selected",
+            message: "Multiple matches, please select:",
+            choices: matches
+        }];
+
+        lines.forEach(function(line) {
+            var result = line.match(/^(.*) \[id: (.*)\]$/);
+            if(result) {
+                matches.push({
+                    name: result[1],
+                    value: result[2]
+                });
+            }
+        });
+
+        return (
+            inquirer.prompt(questions)
+            .then(function(answers) {
+                //console.log("IN ANSWERS");
+                var id = answers.selected;
+                return exec('lpass show ' + id);
+            })
+            .then(function(result) {
+                //console.log("IN RESULTS");
+                var lines = result.stdout.toString().split('\n');
+                if(lines.length == 0 || lines[0].startsWith('Multiple matches found.')) {
+                    console.log(result.stderr);
+                    console.log(result.stdout);
+                    process.exit();
+                }
+                return lines;
+            })
+        );
+    }
+    else {
+        return lines;
+    }
+}
+
+function sfdxLogin(lines) {
+    var username;
+    var password;
+    var url = "login.salesforce.com";
+    lines.forEach(function(line) {
+        if( line.startsWith('Username: ') ) {
+            username = line.match(/^Username: (.*)$/)[1];
+        }
+        if( line.startsWith('Password: ') ) {
+            password = line.match(/Password: (.*)$/)[1];
+        }
+        if( line.startsWith('URL: https://') ) {
+            url = line.match(/URL: https:\/\/(.*)$/)[1];
+        }
+    });
+
+    var cmd = "sfdx waw:auth:username:login -u " + username + " -r https://" + url + " -p '" + password + "'";
+    var masked_cmd = String(cmd).replace(password, "********");
+    console.log("Executing: "  + masked_cmd);
+    child_process.exec(cmd, function(error, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+    });
+}

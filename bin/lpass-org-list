@@ -2,6 +2,8 @@
 
 /* vim: set filetype=javascript : */
 
+var SEP=';';
+
 var Promise = require('bluebird');
 
 var child_process = require('child_process');
@@ -16,7 +18,7 @@ var node_script = process.argv.shift();
 var search_string = process.argv.shift();
 
 var filename = "orgs.csv";
-var header = "orgId,expDate,username,name,folder,lpassId";
+var header = "orgId"+SEP+"expDate"+SEP+"username"+SEP+"name"+SEP+"folder"+SEP+"lpassId";
 fs.appendFileSync(filename, header + "\n");
 
 exec("lpass ls --color=never")
@@ -48,6 +50,7 @@ exec("lpass ls --color=never")
     */
 })
 .mapSeries(function(org) {
+    console.log("LPASS ID: " + org.lpassId);
     return exec('lpass show ' + org.lpassId)
         .then(function(result){
             var lines = result.stdout.toString().split('\n');
@@ -82,7 +85,7 @@ exec("lpass ls --color=never")
             }
         })
         .then(function(){
-            return exec('force query "SELECT Id,TrialExpirationDate FROM Organization" --format:csv');
+            return exec('force query --format csv "SELECT Id,TrialExpirationDate FROM Organization"');
         })
         .then(function(result) {
             var lines = result.stdout.toString().split('\n');
@@ -113,7 +116,11 @@ exec("lpass ls --color=never")
             console.log("EXPDATE: " + org.expDate);
         })
         .then(function(){
-            return exec('force logout');
+            return exec('force logout -u=' + org.username).catch(function(err) {
+                console.log("LOGOUT FAILED");
+                console.log(err.stderr);
+                console.log(err.stdout);
+            });
         })
         .then(function(){
             return org;
@@ -124,10 +131,15 @@ exec("lpass ls --color=never")
             var errorMsg = _.trim( err.stderr.toString().split('\n')[0] );
             org.expDate = "\"" + errorMsg.replace(/^ERROR: /g, '') + "\"";
             return org;
-        });
-})
-.mapSeries(function(org) {
-    // "orgId,expDate,username,name,folder,lpassId";
-    var line = org.orgId + "," + org.expDate + "," + org.username + "," + org.name + "," + org.folder + "," + org.lpassId;
-    fs.appendFileSync(filename, line + "\n");
+        })
+        .then(function() {
+            console.log("appending...");
+            // "orgId,expDate,username,name,folder,lpassId";
+            var line = org.orgId + SEP + org.expDate + SEP + org.username + SEP + org.name + SEP + org.folder + SEP + "=\"" + org.lpassId + "\"";
+            fs.appendFileSync(filename, line + "\n");
+        })
 });
+/*
+.mapSeries(function(org) {
+});
+*/
