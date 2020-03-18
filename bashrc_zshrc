@@ -27,17 +27,6 @@ export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
 export EDITOR=vim
 
-add-or-remove-help() {
-    local CURRENT_LINE=$READLINE_LINE 
-    local CURRENT_POINT=$READLINE_POINT
-    if [[ "$CURRENT_LINE" =~ ^[^[:space:]]+[[:space:]]help ]]; then
-        READLINE_LINE=${CURRENT_LINE/ help/}
-        READLINE_POINT=`expr $CURRENT_POINT - 5`
-    else
-        READLINE_LINE=${CURRENT_LINE/ / help }
-        READLINE_POINT=`expr $CURRENT_POINT + 5`
-    fi
-}
 
 if   [ -n "$ZSH_NAME" ]; then
     # Set keybindings to EMACS style (e.g. CTRL-A goes to beginning of line)
@@ -60,9 +49,35 @@ if   [ -n "$ZSH_NAME" ]; then
     autoload -U compinit
     compinit
     zstyle ':completion:*' menu select
+
+    add-or-remove-help() {
+        local CURRENT_LINE=$BUFFER
+        local CURRENT_POINT=$CURSOR
+        if [[ "$CURRENT_LINE" =~ ^[^[:space:]]+[[:space:]]help ]]; then
+            BUFFER=${CURRENT_LINE/ help/}
+            CURSOR=`expr $CURRENT_POINT '-' 5`
+        else
+            BUFFER=${CURRENT_LINE/ / help }
+            CURSOR=`expr $CURRENT_POINT '+' 5`
+        fi
+    }
+    zle -N add-or-remove-help
+    bindkey '^X^H' add-or-remove-help
 else
     export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
+    add-or-remove-help() {
+        local CURRENT_LINE=$READLINE_LINE 
+        local CURRENT_POINT=$READLINE_POINT
+        if [[ "$CURRENT_LINE" =~ ^[^[:space:]]+[[:space:]]help ]]; then
+            READLINE_LINE=${CURRENT_LINE/ help/}
+            READLINE_POINT=`expr $CURRENT_POINT - 5`
+        else
+            READLINE_LINE=${CURRENT_LINE/ / help }
+            READLINE_POINT=`expr $CURRENT_POINT + 5`
+        fi
+    }
     bind -x '"\C-x\C-h":add-or-remove-help'
+    SFDX_AC_BASH_SETUP_PATH=/Users/meckert/Library/Caches/sfdx/autocomplete/bash_setup && test -f $SFDX_AC_BASH_SETUP_PATH && source $SFDX_AC_BASH_SETUP_PATH;
 fi
 
 if [[ "$OSTYPE" == darwin* ]]; then
@@ -78,5 +93,15 @@ if [[ "$OSTYPE" == darwin* ]]; then
         export ANDROID_HOME=/Users/meckert/Library/Android/sdk 
         export PATH="$PATH:/Users/meckert/Library/Android/sdk/platform-tools"
     fi
+
+    if [ -d /Applications/GIMP-*.app/ ]; then
+        GIMP_DIR=`echo /Applications/GIMP-*.app/`
+        alias gimp="open -a $GIMP_DIR"
+    fi
 fi
 
+alias urldecode='python -c "import sys, urllib as ul; \
+    print ul.unquote_plus(sys.argv[1])"'
+
+alias urlencode='python -c "import sys, urllib as ul; \
+    print ul.quote_plus(sys.argv[1])"'
