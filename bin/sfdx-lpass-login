@@ -13,15 +13,6 @@ var node_binary = process.argv.shift();
 var node_script = process.argv.shift();
 var search_string = process.argv.shift();
 
-/*
-inquirer.prompt({
-    type: "list",
-    name: "selected",
-    message: "Multiple matches, please select:",
-    choices: ["yes", "mo"]
-}, function(){});
-*/
-
 lpassShowG(search_string)
 .fail(function(error) {
     console.log("Please log into lpass");
@@ -120,11 +111,17 @@ function sfdxLogin(lines) {
         }
     });
 
+    password = password
+        .replace(/'/g, "'\\''");        
+
+
     var cmd = "sfdx waw:auth:username:login -u " + username + " -r https://" + url + " -p '" + password + "'";
-    var masked_cmd = String(cmd).replace(password, "********");
+    //var masked_cmd = String(cmd).replace(password, "********");
+    var masked_cmd = cmd;
     console.log("Executing: "  + masked_cmd);
     child_process.exec(cmd, function(error, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
+    console.log("To set an alias run:\nsfdx force:alias:set last=" + username);
 }

@@ -43,13 +43,25 @@ if   [ -n "$ZSH_NAME" ]; then
     export PROMPT="%{$FG[135]%}%~${SEP}\$%{$reset_color%} "
     #export PROMPT='%h %~> '
 
-    # source $HOME/dotfiles/zsh-autosuggestions/zsh-autosuggestions.zsh
-    # add custom completion scripts
-    fpath=($HOME/dotfiles/salesforce-cli-zsh-completion $fpath)
+    
+    # Load SFDX autocompletion
+    SFDX_AC_ZSH_SETUP_PATH=/Users/meckert/Library/Caches/sfdx/autocomplete/zsh_setup && test -f $SFDX_AC_ZSH_SETUP_PATH && source $SFDX_AC_ZSH_SETUP_PATH;    
+
+    # Setup autocompletion stuff
     autoload -U compinit
     compinit
-    zstyle ':completion:*' menu select
+    zmodload zsh/complist
+    zstyle ':completion:*' menu yes select
+    bindkey -M menuselect '/' history-incremental-search-forward
+    bindkey -M menuselect '?' history-incremental-search-backward
 
+    # Edit current command line in editor (like in bash) via CTRL-X CTRL-E
+    autoload edit-command-line
+    zle -N edit-command-line
+    bindkey '^x^e' edit-command-line
+
+
+    # Insert "help" in current command line after the command (first space) via CTRL-X CTRL-H
     add-or-remove-help() {
         local CURRENT_LINE=$BUFFER
         local CURRENT_POINT=$CURSOR
@@ -105,3 +117,7 @@ alias urldecode='python -c "import sys, urllib as ul; \
 
 alias urlencode='python -c "import sys, urllib as ul; \
     print ul.quote_plus(sys.argv[1])"'
+
+pdfcompress() {
+    gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/${3:-"printer"} -dCompatibilityLevel=1.4 -sOutputFile="$2" "$1"
+}

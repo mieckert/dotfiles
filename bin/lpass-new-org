@@ -8,6 +8,6 @@ if [ -z "$1" -o -z "$2" ]; then
 fi
 
 echo "Generating entry and password"
-lpass generate --sync=now --clip --no-symbols --username=$1 --url="https://login.salesforce.com" "Demos/$2" 12
+lpass generate --sync=now --clip --username=$1 --url="https://login.salesforce.com" "Demos/$2" 12
 echo "Synching"
 lpass sync

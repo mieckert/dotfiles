@@ -39,6 +39,7 @@ execute pathogen#infect()
 
 syntax on
 let mapleader="-"
+" Edit and source vimrc (-ev and -sv)
 execute "nnoremap <leader>ev :tabedit " . s:path . "<cr>"
 execute "nnoremap <leader>sv :source " . s:path . "<cr>"
 nnoremap <leader>/ :let @/=""<cr>
