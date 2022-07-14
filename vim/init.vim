@@ -17,6 +17,10 @@ if has("gui_running")
     set mouse=a
 endif
 
+if exists("g:neovide")
+    set mouse=a
+    set guifont=Menlo:h16
+endif
 
 
 " Add Vundle package manager to runtime path (located in ~/dotfiles/vim/Vundle.vim)

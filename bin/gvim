@@ -16,7 +16,7 @@ elif [[ "$OSTYPE" == darwin* ]]
 then
     opts="-g"
     #GVIM_EXE='/Applications/MacVim.app/Contents/MacOS/Vim'
-    GVIM_EXE='/usr/local/bin/gvim'
+    GVIM_EXE='/opt/homebrew/bin/gvim'
 else
     echo "unknown OSTYPE $OSTYPE"
     exit 1

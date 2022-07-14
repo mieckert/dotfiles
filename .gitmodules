@@ -1,27 +1,6 @@
-[submodule "vimfiles/bundle/syntastic"]
-	path = vimfiles/bundle/syntastic
-	url = https://github.com/scrooloose/syntastic.git
-[submodule "vimfiles/bundle/tlib_vim"]
-	path = vimfiles/bundle/tlib_vim
-	url = https://github.com/tomtom/tlib_vim.git
-[submodule "vimfiles/bundle/vim-addon-mw-utils"]
-	path = vimfiles/bundle/vim-addon-mw-utils
-	url = https://github.com/MarcWeber/vim-addon-mw-utils.git
-[submodule "vimfiles/bundle/vim-snipmate"]
-	path = vimfiles/bundle/vim-snipmate
-	url = https://github.com/garbas/vim-snipmate.git
-[submodule "vimfiles/vim-snippets"]
-	path = vimfiles/vim-snippets
-	url = https://github.com/honza/vim-snippets.git
-[submodule "vimfiles/bundle/tabular"]
-	path = vimfiles/bundle/tabular
-	url = git://github.com/godlygeek/tabular.git
 [submodule "salesforce-cli-zsh-completion"]
 	path = salesforce-cli-zsh-completion
 	url = https://github.com/wadewegner/salesforce-cli-zsh-completion.git
 [submodule "zsh-autosuggestions"]
 	path = zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
-[submodule "vim/Vundle.vim"]
-	path = vim/Vundle.vim
-	url = https://github.com/VundleVim/Vundle.vim.git
