@@ -26,7 +26,7 @@ endif
 " Add Vundle package manager to runtime path (located in ~/dotfiles/vim/Vundle.vim)
 " and initalize it; filetype must be set to off according to Vundle docs
 filetype off
-let s:vundle = expand('<sfile>:p:h') . "/vim/Vundle.vim"
+let s:vundle = expand('<sfile>:p:h') . "/Vundle.vim"
 let &rtp .= ',' . s:vundle
 
 call vundle#begin()
