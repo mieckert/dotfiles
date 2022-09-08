@@ -2,45 +2,16 @@ set shell=/bin/bash
 set nocompatible
 set number
 syntax on
-
-" vim GUI settings (font, window size, etc.)
-if has("gui_running")
-    echo "gui_running"
-    if has("gui_macvim")
-        set guifont=Menlo:h16
-    else
-        set guifont=Consolas:h12:cANSI
-    endif
-    
-    set columns=120
-    set lines=25
-    set mouse=a
-endif
-
-if exists("g:neovide")
-    set mouse=a
-    set guifont=Menlo:h16
-endif
+set mouse=a
+set tabstop=4
+set shiftwidth=4
 
 
-" Add Vundle package manager to runtime path (located in ~/dotfiles/vim/Vundle.vim)
-" and initalize it; filetype must be set to off according to Vundle docs
-filetype off
-let s:vundle = expand('<sfile>:p:h') . "/Vundle.vim"
-let &rtp .= ',' . s:vundle
+let s:configdir = expand('<sfile>:p:h')
+let &rtp .= s:configdir
 
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-
-" Syntax checking etc.
-Plugin 'vim-syntastic/syntastic'
-
-" Rust support
-Plugin 'rust-lang/rust.vim'
-
-" End of Vundle section, filetype required by VUndle
-call vundle#end()
-filetype plugin indent on
+exec ":source " . s:configdir . "/gui.vim"
+exec ":source " . s:configdir . "/plugins.vim"
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -60,3 +31,17 @@ set cursorline
 hi clear CursorLine
 hi LineNr guibg=gray18
 hi CursorLineNr term=bold cterm=bold ctermfg=14 gui=bold guifg=gray90 guibg=gray18
+
+" Copied from mswin.vim to enable copy&paste keys etc.
+
+" set 'selection', 'selectmode', 'mousemodel' and 'keymodel' for MS-Windows
+" behave mswin
+" backspace and cursor keys wrap to previous/next line
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+" backspace in Visual mode deletes selection
+vnoremap <BS> d
+let g:neovide_input_use_logo = 1
+noremap <D-v> "+p<CR>
+noremap! <D-v> <C-R>+
+tnoremap <D-v> <C-R>+
+vnoremap <D-c> "+y<CR> 

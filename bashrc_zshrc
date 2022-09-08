@@ -3,31 +3,7 @@
 export PATH="$HOME/dotfiles/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
-
-if [[ "$OSTYPE" == darwin* ]]; then
-    alias ls='ls -Gp'
-    alias ll='ls -lGp'
-else
-    alias ls='ls -p --color'
-    alias ll='ls -lp --color'
-fi
-
-
-alias lpass-login="lpass login $LPASS_EMAIL"
-alias findjs='find . -type f -name '"'"'*.js'"'"' -and -not -path '"'"'*node_modules*'"'"' -and -not -path '"'"'*plugins*'"'"' -and -not -path '"'"'*bower_components*'"'"
-
-alias ssh_to_home="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST"
-alias ssh_tunnel_for_printer="ssh -i $SSH_TO_HOME_PRIVATE_KEY_FILE -p $SSH_TO_HOME_PORT $SSH_TO_HOME_USERNAME@$SSH_TO_HOME_HOST -L 1631:$SSH_TO_HOME_PRINTER:631 -N"
-
-xmlless() {
-    xmllint --format $1 | less
-}
-
-export HISTSIZE=1000000
-export HISTFILE="$HOME/.history"
-export SAVEHIST=$HISTSIZE
 export EDITOR=vim
-
 
 if   [ -n "$ZSH_NAME" ]; then
     # Set keybindings to EMACS style (e.g. CTRL-A goes to beginning of line)
@@ -40,8 +16,8 @@ if   [ -n "$ZSH_NAME" ]; then
         BG[$color]="%{[48;5;${color}m%}"
     done
     SEP=' '
-    #SEP=$'\n'
-    export PROMPT="%{$FG[135]%}%~${SEP}\$%{$reset_color%} "
+	NEWLINE=$'\n'
+	export PROMPT="%{$FG[135]%}%~%(40l.${NEWLINE}.${SEP})\$%{$reset_color%} "
     #export PROMPT='%h %~> '
 
     
@@ -49,8 +25,15 @@ if   [ -n "$ZSH_NAME" ]; then
     SFDX_AC_ZSH_SETUP_PATH=/Users/meckert/Library/Caches/sfdx/autocomplete/zsh_setup && test -f $SFDX_AC_ZSH_SETUP_PATH && source $SFDX_AC_ZSH_SETUP_PATH;    
 
     # Setup autocompletion stuff
-    autoload -U compinit
-    compinit
+	if type brew &>/dev/null
+	then
+		FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+	    autoload -Uz compinit
+	    compinit
+	else
+    	autoload -U compinit
+    	compinit
+	fi
     zmodload zsh/complist
     zstyle ':completion:*' menu yes select
     bindkey -M menuselect '/' history-incremental-search-forward
@@ -94,7 +77,6 @@ else
 fi
 
 if [[ "$OSTYPE" == darwin* ]]; then
-    alias force='~/Applications/force'
     export PATH="/usr/local/heroku/bin:$PATH"
     export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
     export PATH="$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin"
@@ -111,14 +93,10 @@ if [[ "$OSTYPE" == darwin* ]]; then
         GIMP_DIR=`echo /Applications/GIMP-*.app/`
         alias gimp="open -a $GIMP_DIR"
     fi
+
+	alias ibrew="arch -x86_64 /usr/local/bin/brew"
 fi
 
-alias urldecode='python -c "import sys, urllib as ul; \
-    print ul.unquote_plus(sys.argv[1])"'
-
-alias urlencode='python -c "import sys, urllib as ul; \
-    print ul.quote_plus(sys.argv[1])"'
-
-pdfcompress() {
-    gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/${3:-"printer"} -dCompatibilityLevel=1.4 -sOutputFile="$2" "$1"
-}
+# TODO: This won't work on windows if we're using c:/dotfiles
+# together with MSYS or similar
+source ~/dotfiles/shell/alias_func.sh

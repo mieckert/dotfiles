@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [[ -e /tmp/nvimsocket ]]; then
+	nvr --remote-tab-silent $*
+else
+	NVIM_LISTEN_ADDRESS=/tmp/nvimsocket neovide $*
+fi
+
