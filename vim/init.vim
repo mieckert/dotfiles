@@ -21,6 +21,8 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_c_include_dirs = [ '/opt/homebrew/include', 'include' ]
+
 
 " Set a nice color scheme with a dark grey background; make cursorline visible only
 " in the line number side bar, not the main text

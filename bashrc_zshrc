@@ -89,8 +89,8 @@ if [[ "$OSTYPE" == darwin* ]]; then
         export PATH="$PATH:/Users/meckert/Library/Android/sdk/platform-tools"
     fi
 
-    if [ -d /Applications/GIMP-*.app/ ]; then
-        GIMP_DIR=`echo /Applications/GIMP-*.app/`
+    if [ -d /Applications/GIMP.app/ ]; then
+        GIMP_DIR=`echo /Applications/GIMP.app/`
         alias gimp="open -a $GIMP_DIR"
     fi
 
