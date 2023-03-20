@@ -1,0 +1,2 @@
+mount_smbfs //nas@fritz.box/FRITZ.NAS/Scan ./scan
+fswatch . | while read x; do echo ">> $x"; done
