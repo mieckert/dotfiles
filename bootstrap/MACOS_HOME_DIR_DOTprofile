@@ -1,2 +1,4 @@
-. $HOME/.privateconf
-. $HOME/dotfiles/bashrc_zshrc
+. "$HOME/.privateconf"
+. "$HOME/dotfiles/bashrc_zshrc"
+. "$HOME/.cargo/env"
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+WIDTH=${1:-1280}
+HEIGHT=${2:-1024}
+
+osascript << __END__
+tell application "Chrome" 
+	set the bounds of the front window to {0, 0, $WIDTH, $HEIGHT}
+end tell
+__END__

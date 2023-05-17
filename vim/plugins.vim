@@ -18,6 +18,9 @@ Plugin 'vim-syntastic/syntastic'
 " Rust support
 Plugin 'rust-lang/rust.vim'
 
+" LSP Config
+Plugin 'neovim/nvim-lspconfig'
+
 " End of Vundle section, filetype required by VUndle
 call vundle#end()
 filetype plugin indent on

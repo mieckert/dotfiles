@@ -12,6 +12,7 @@ let &rtp .= s:configdir
 
 exec ":source " . s:configdir . "/gui.vim"
 exec ":source " . s:configdir . "/plugins.vim"
+exec ":source " . s:configdir . "/lsp.lua"
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}

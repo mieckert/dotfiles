@@ -3,6 +3,6 @@
 if [[ -e /tmp/nvimsocket ]]; then
 	nvr --remote-tab-silent $*
 else
-	NVIM_LISTEN_ADDRESS=/tmp/nvimsocket neovide $*
+	NVIM_LISTEN_ADDRESS=/tmp/nvimsocket neovide --geometry=80x35 $*
 fi
 
