@@ -41,13 +41,14 @@ xmlless() {
     xmllint --format $1 | less
 }
 
-alias urldecode='python -c "import sys, urllib as ul; \
-    print ul.unquote_plus(sys.argv[1])"'
+alias urldecode='python3 -c "import sys, urllib as ul; \
+	print(ul.unquote_plus(sys.argv[1]))"'
 
-alias urlencode='python -c "import sys, urllib as ul; \
-    print ul.quote_plus(sys.argv[1])"'
+alias urlencode='python3 -c "import sys, urllib as ul; \
+	print(ul.quote_plus(sys.argv[1]))"'
 
 pdfcompress() {
     gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/${3:-"printer"} -dCompatibilityLevel=1.4 -sOutputFile="$2" "$1"
 }
 
+alias tabletool='open -a Table\ Tool'

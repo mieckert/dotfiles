@@ -1,5 +1,7 @@
 " vim GUI settings (font, window size, etc.)
-if has("gui_running") " only set in gvim (not neovide, nvim-qt, etc.)
+if exists("g:neovide")
+    set guifont=Menlo:h16
+elseif has("gui_running") " only set in gvim (not neovide, nvim-qt, etc.)
     if has("gui_macvim")
         set guifont=Menlo:h16
     else
@@ -10,7 +12,4 @@ if has("gui_running") " only set in gvim (not neovide, nvim-qt, etc.)
     set lines=35
 endif
 
-if exists("g:neovide")
-    set guifont=Menlo:h16
-endif
 

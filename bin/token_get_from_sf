@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -x
+
+SALESFORCE_LOGIN_URL="https://login.salesforce.com"
+SALESFORCE_OAUTH2_ENDPOINT_TOKEN="${SALESFORCE_LOGIN_URL}/services/oauth2/token"
+
+
+RESPONSE=$( \
+	curl -X POST \
+    	-F "grant_type=password" \
+		-F "client_id=${CLIENT_ID}" \
+		-F "client_secret=${CLIENT_SECRET}" \
+     	-F "username=${USERNAME}" \
+     	-F "password=${PASSWORD}" \
+     	${SALESFORCE_OAUTH2_ENDPOINT_TOKEN} \
+)
+
+TOKEN=$(echo "$RESPONSE" | jq -r ".access_token")
+INSTANCE_URL=$(echo "$RESPONSE" | jq -r ".instance_url")
+
+echo "---"
+echo "export TOKEN=\"$TOKEN\"" 
+echo "export INSTANCE_URL=\"$INSTANCE_URL\"" 
+echo "---"
