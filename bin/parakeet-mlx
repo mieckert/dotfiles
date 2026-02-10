@@ -1,0 +1,2 @@
+#!/bin/bash
+uvx --python 3.13 parakeet-mlx $*

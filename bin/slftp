@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Default is no SSH key
+ssh_key=""
+
+# Parse command-line options
+while getopts "i:" opt; do
+  case ${opt} in
+    i )
+      ssh_key=$OPTARG
+      ;;
+    \? )
+      echo "Usage: cmd [-i ssh_key] sftp_url"
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+# Check if sftp URL is provided
+if [ -z "$1" ]; then
+  echo "SFTP URL not provided."
+  echo "Usage: cmd [-i ssh_key] sftp_url"
+  exit 1
+fi
+
+sftp_url=$1
+
+# Build the lftp command
+if [ -n "$ssh_key" ]; then
+  lftp_command="set sftp:connect-program \"ssh -a -x -i $ssh_key\"; connect sftp://$sftp_url"
+else
+  lftp_command="connect sftp://$sftp_url"
+fi
+
+# Run lftp with the constructed command
+lftp -e "$lftp_command"

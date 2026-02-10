@@ -52,3 +52,8 @@ pdfcompress() {
 }
 
 alias tabletool='open -a Table\ Tool'
+
+############################################################
+# Simon Willison's llm                                     #
+############################################################
+alias llm='uvx --with llm-anthropic --with llm-gemini llm'

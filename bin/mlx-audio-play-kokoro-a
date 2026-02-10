@@ -1,0 +1,1 @@
+uvx --python=3.13 --with mlx-audio --with pip python -m mlx_audio.tts.generate --model mlx-community/Kokoro-82M-bf16 --lang_code a --join_audio --play --text "$(cat $1)"
