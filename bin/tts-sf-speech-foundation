@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eaxo pipefail
+
+FILE="$1"
+
+RESPONSE=$(curl "https://${SFAP_MY_DOMAIN}/services/oauth2/token" \
+    --header "Content-Type: application/x-www-form-urlencoded" \
+    --data-urlencode "grant_type=client_credentials" \
+    --data-urlencode "client_id=${SFAP_CLIENT_ID}" \
+    --data-urlencode "client_secret=${SFAP_CLIENT_SECRET}" \
+)
+
+ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token')
+
+echo "Starting transcription for file: $FILE"
+
+curl -vv --location "https://api.salesforce.com/einstein/platform/v1/models/transcribeInternalV1/transcriptions" \
+    --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+    --header 'x-sfdc-app-context: EinsteinGPT' \
+    --header 'x-client-feature-id: external-edc' \
+    --form "input=@${FILE}" \
+    --form 'engine="internal"' \
+    --form 'diarization="true"' \
+    --form 'language="english"' 
+#    | jq -r '.transcription[0]'

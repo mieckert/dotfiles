@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
 
+# Convert relative paths to absolute paths before passing to Neovide
+# This ensures that even if the app spawns in ~, it opens the correct file
+args=()
+for arg in "$@"; do
+    if [[ -f "$arg" ]]; then
+        args+=("$(realpath "$arg")")
+    else
+        args+=("$arg")
+    fi
+done
+
 if [[ -e /tmp/nvimsocket ]]; then
-	nvr --remote-tab-silent "$*"
+    nvr --remote-tab-silent "${args[@]}"
 else
-	NVIM_LISTEN_ADDRESS=/tmp/nvimsocket neovide --grid=80x35 "$*" &
+    NVIM_LISTEN_ADDRESS=/tmp/nvimsocket neovide --grid=80x35 "${args[@]}" &
 fi
 

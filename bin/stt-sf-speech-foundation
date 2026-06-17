@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -eaxo pipefail
+
+INPUT_FILE="$1"
+OUTPUT_FILE="$2"
+RESPONSE=$(curl "https://${SFAP_MY_DOMAIN}/services/oauth2/token" \
+    --header "Content-Type: application/x-www-form-urlencoded" \
+    --data-urlencode "grant_type=client_credentials" \
+    --data-urlencode "client_id=${SFAP_CLIENT_ID}" \
+    --data-urlencode "client_secret=${SFAP_CLIENT_SECRET}" \
+)
+
+VOICE="Ruth"
+ACCESS_TOKEN=$(echo "$RESPONSE" | jq -r '.access_token')
+
+curl --location 'https://api.salesforce.com/einstein/platform/v1/models/transcribeInternalV1/speech-synthesis' \
+    --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+    --header 'x-sfdc-app-context: EinsteinGPT' \
+    --header 'x-client-feature-id: external-edc' \
+    --form "input=@${INPUT_FILE}" \
+    --form 'engine="aws"' \
+    --form "voiceId=\"${VOICE}\"" \
+    | jq -r '.audioStream' | base64 --decode > "${OUTPUT_FILE}"

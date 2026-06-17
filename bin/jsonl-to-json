@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+
+const args = process.argv.slice(2);
+
+if (args.length < 1 || args.length > 2) {
+    console.error('Usage: jsonl-to-json <file.jsonl> [target.json]');
+    process.exit(1);
+}
+
+const sourceFile = args[0];
+
+if (path.extname(sourceFile) !== '.jsonl') {
+    console.error(`Error: source file must have .jsonl extension: ${sourceFile}`);
+    process.exit(1);
+}
+
+if (!fs.existsSync(sourceFile)) {
+    console.error(`Error: source file does not exist: ${sourceFile}`);
+    process.exit(1);
+}
+
+const targetFile = args[1] || sourceFile.slice(0, -'.jsonl'.length) + '.json';
+
+if (fs.existsSync(targetFile)) {
+    console.error(`Error: target file already exists: ${targetFile}`);
+    process.exit(1);
+}
+
+let content;
+try {
+    content = fs.readFileSync(sourceFile, 'utf8');
+} catch (err) {
+    console.error(`Error reading source file: ${err.message}`);
+    process.exit(1);
+}
+const lines = content.split('\n').filter(line => line.trim() !== '');
+
+const entries = lines.map((line, index) => {
+    try {
+        return JSON.parse(line);
+    } catch (err) {
+        console.error(`Error parsing line ${index + 1}: ${err.message}`);
+        process.exit(1);
+    }
+});
+
+fs.writeFileSync(targetFile, JSON.stringify(entries, null, 4) + '\n');
+console.log(`Wrote ${entries.length} entries to ${targetFile}`);

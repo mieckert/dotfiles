@@ -1,0 +1,2 @@
+" Source shared Vimscript configuration
+source ~/dotfiles/common.vim

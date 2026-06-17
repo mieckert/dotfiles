@@ -7,6 +7,7 @@ export PATH="/opt/homebrew/bin:$PATH"
 export EDITOR=vim
 
 if   [ -n "$ZSH_NAME" ]; then
+    # ZSH_NAME is set, so we're in a zsh
     # Set keybindings to EMACS style (e.g. CTRL-A goes to beginning of line)
     bindkey -e
 
@@ -36,9 +37,12 @@ if   [ -n "$ZSH_NAME" ]; then
     	compinit
 	fi
     zmodload zsh/complist
-    zstyle ':completion:*' menu yes select
+    zstyle ':completion:*' menu select
     bindkey -M menuselect '/' history-incremental-search-forward
     bindkey -M menuselect '?' history-incremental-search-backward
+	unsetopt menu_complete
+	setopt list_ambiguous
+	setopt auto_menu
 
     # Edit current command line in editor (like in bash) via CTRL-X CTRL-E
     autoload edit-command-line
@@ -60,7 +64,13 @@ if   [ -n "$ZSH_NAME" ]; then
     }
     zle -N add-or-remove-help
     bindkey '^X^H' add-or-remove-help
+
+    # Always reset the cursor to a blinking underline character, so that neovim etc. can't mess it up
+    precmd() {
+        printf '\e[3 q'
+    }
 else
+    # Else, we in a bash
     export PS1="\[\e[0;36m\]\w \\$\[\e[0m\] "
     add-or-remove-help() {
         local CURRENT_LINE=$READLINE_LINE 
@@ -75,6 +85,9 @@ else
     }
     bind -x '"\C-x\C-h":add-or-remove-help'
     SFDX_AC_BASH_SETUP_PATH=/Users/meckert/Library/Caches/sfdx/autocomplete/bash_setup && test -f $SFDX_AC_BASH_SETUP_PATH && source $SFDX_AC_BASH_SETUP_PATH;
+
+    # Always reset the cursor to a blinking underline character, so that neovim etc. can't mess it up
+    export PROMPT_COMMAND="printf '\e[4 q'; $PROMPT_COMMAND"
 fi
 
 if [[ "$OSTYPE" == darwin* ]]; then
@@ -101,3 +114,4 @@ fi
 # TODO: This won't work on windows if we're using c:/dotfiles
 # together with MSYS or similar
 source ~/dotfiles/shell/alias_func.sh
+

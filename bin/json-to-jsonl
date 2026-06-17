@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+
+const args = process.argv.slice(2);
+
+if (args.length < 1 || args.length > 2) {
+    console.error('Usage: json-to-jsonl <file.json> [target.jsonl]');
+    process.exit(1);
+}
+
+const sourceFile = args[0];
+
+if (path.extname(sourceFile) !== '.json') {
+    console.error(`Error: source file must have .json extension: ${sourceFile}`);
+    process.exit(1);
+}
+
+if (!fs.existsSync(sourceFile)) {
+    console.error(`Error: source file does not exist: ${sourceFile}`);
+    process.exit(1);
+}
+
+const targetFile = args[1] || sourceFile.slice(0, -'.json'.length) + '.jsonl';
+
+if (fs.existsSync(targetFile)) {
+    console.error(`Error: target file already exists: ${targetFile}`);
+    process.exit(1);
+}
+
+let data;
+try {
+    data = JSON.parse(fs.readFileSync(sourceFile, 'utf8'));
+} catch (err) {
+    console.error(`Error parsing JSON: ${err.message}`);
+    process.exit(1);
+}
+
+if (!Array.isArray(data)) {
+    console.error('Error: source file must contain a JSON array');
+    process.exit(1);
+}
+
+const output = data.map(entry => JSON.stringify(entry)).join('\n') + '\n';
+fs.writeFileSync(targetFile, output);
+console.log(`Wrote ${data.length} entries to ${targetFile}`);
